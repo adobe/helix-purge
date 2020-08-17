@@ -17,5 +17,6 @@ module.exports = {
     }],
     '@semantic-release/github',
   ],
-  branch: 'main'
+  branch: 'main',
+  branches: ['main'],
 };
