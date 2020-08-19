@@ -18,7 +18,7 @@
     "deploy-ci": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci"
   },
   "wsk": {
-    "name": "helix-services/helix-purge@${version}"
+    "name": "helix-services/purge@${version}"
   },
   "repository": {
     "type": "git",
