@@ -35,13 +35,14 @@ async function purgeInner(host, path, service, token, log) {
 
 async function purgeOuter(host, path, log) {
   const url = `https://${host}${path}`;
+  log.info('Purging', url);
   try {
     const res = await fetch(url, {
       method: 'PURGE',
     });
-    log.debug(res.text);
+    log.debug(await res.text());
     if (!res.ok) {
-      log.error('Unable to purge outer CDN', res.text);
+      log.error('Unable to purge outer CDN', await res.text());
       return { status: 'error', url };
     }
   } catch (e) {
@@ -75,8 +76,8 @@ async function main({
 
   results.push(...await Promise.all(xfh
     .split(',')
-    .map(fwhost => fwhost.trim())
-    .filter(fwhost => !!fwhost)
+    .map((fwhost) => fwhost.trim())
+    .filter((fwhost) => !!fwhost)
     .map((fwhost) => purgeOuter(fwhost, path, log))));
 
   if (results.length === 0) {
