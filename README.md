@@ -15,8 +15,12 @@
 ## Usage
 
 ```bash
-curl https://adobeioruntime.net/api/v1/web/helix/helix-services/purge@v1
+curl -X POST https://adobeioruntime.net/api/v1/web/helix/helix-services/purge@v1?host=…&xfh=…&path=…
 ```
+
+- `host`: the inner cdn hostname
+- `xfh`: the outer cdn hostnames, comma separated
+- `path`: the path to purge
 
 For more, see the [API documentation](docs/API.md).
 
