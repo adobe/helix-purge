@@ -57,7 +57,7 @@ async function purgeOuter(host, path, log) {
  * @returns {object} a greeting
  */
 async function main({
-  host, xfh, path, HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN, __ow_logger: log,
+  host, xfh = '', path = '', HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN, __ow_logger: log,
 }) {
   const results = [];
 
@@ -75,9 +75,19 @@ async function main({
 
   results.push(...await Promise.all(xfh
     .split(',')
-    .trim()
+    .map(fwhost => fwhost.trim())
+    .filter(fwhost => !!fwhost)
     .map((fwhost) => purgeOuter(fwhost, path, log))));
 
+  if (results.length === 0) {
+    return {
+      statusCode: 204,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: results,
+    };
+  }
   if (!results.find((r) => r.status !== 'ok')) {
     return {
       statusCode: 200,
