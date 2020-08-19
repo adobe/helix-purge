@@ -47,5 +47,5 @@ describe('Post-Deploy Tests', () => {
       }).catch((e) => {
         throw e;
       });
-  }).timeout(10000);
+  }).timeout(50000);
 });
