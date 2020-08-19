@@ -42,8 +42,7 @@ async function purgeOuter(host, path, log) {
     });
     log.debug(await res.text());
     if (!res.ok) {
-      log.error('Unable to purge outer CDN', await res.text());
-      return { status: 'error', url };
+      throw new Error(await res.text());
     }
   } catch (e) {
     log.error('Unable to purge outer CDN', e);

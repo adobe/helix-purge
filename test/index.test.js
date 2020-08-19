@@ -57,6 +57,26 @@ describe('Index Tests', () => {
     ]);
   }).timeout(5000);
 
+  it('index function purges outer cdn with partial failure', async () => {
+    const scope = nock(/./)
+      .intercept('/index.html', 'PURGE')
+      .reply(200)
+      .intercept('/index.html', 'PURGE')
+      .reply(504);
+
+    const result = await index({
+      xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
+      path: '/index.html',
+    });
+
+    scope.done();
+    assert.equal(result.statusCode, 207);
+    assert.deepEqual(result.body, [
+      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
+      { status: 'error', url: 'https://theblog--adobe.hlx.page/index.html' },
+    ]);
+  }).timeout(5000);
+
   it('index function purges outer cdn and inner cdn', async () => {
     const scope = nock(/./)
       .intercept('/index.html', 'PURGE')
