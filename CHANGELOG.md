@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/adobe/helix-purge/compare/v1.0.0...v1.0.1) (2020-08-20)
+
+
+### Bug Fixes
+
+* **test:** do not assume master branch ([4612509](https://github.com/adobe/helix-purge/commit/4612509d69a490d47fe3dd39d8dd100b447f2925))
+
 # 1.0.0 (2020-08-19)
 
 
