@@ -13,15 +13,97 @@ const { wrap } = require('@adobe/openwhisk-action-utils');
 const { logger } = require('@adobe/openwhisk-action-logger');
 const { wrap: status } = require('@adobe/helix-status');
 const { epsagon } = require('@adobe/helix-epsagon');
+const Fastly = require('@adobe/fastly-native-promises');
+const { utils } = require('@adobe/helix-shared');
+const { fetch } = require('@adobe/helix-fetch').context({
+  httpsProtocols:
+  /* istanbul ignore next */
+    process.env.HELIX_FETCH_FORCE_HTTP1 ? ['http1'] : ['http2', 'http1'],
+});
+
+async function purgeInner(host, path, service, token, log) {
+  const url = `https://${host}${path}`;
+  try {
+    const f = Fastly(token, service);
+    await f.purgeKeys([utils.computeSurrogateKey(url)]);
+  } catch (e) {
+    log.error('Unable to purge inner CDN', e);
+    return { status: 'error', url };
+  }
+  return { status: 'ok', url };
+}
+
+async function purgeOuter(host, path, log) {
+  const url = `https://${host}${path}`;
+  log.info('Purging', url);
+  try {
+    const res = await fetch(url, {
+      method: 'PURGE',
+    });
+    log.debug(await res.text());
+    if (!res.ok) {
+      throw new Error(await res.text());
+    }
+  } catch (e) {
+    log.error('Unable to purge outer CDN', e);
+    return { status: 'error', url };
+  }
+  return { status: 'ok', url };
+}
 
 /**
  * This is the main function
  * @param {string} name name of the person to greet
  * @returns {object} a greeting
  */
-function main({ name = 'world' }) {
+async function main({
+  host, xfh = '', path = '', HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN, __ow_logger: log,
+}) {
+  const results = [];
+
+  if (host && HLX_PAGES_FASTLY_SVC_ID && HLX_PAGES_FASTLY_TOKEN) {
+    results.push(await purgeInner(
+      host,
+      path,
+      HLX_PAGES_FASTLY_SVC_ID,
+      HLX_PAGES_FASTLY_TOKEN,
+      log,
+    ));
+  } else {
+    log.warn(`Not purging inner CDN for ${host}${path} due to missing fastly credentials`);
+  }
+
+  results.push(...await Promise.all(xfh
+    .split(',')
+    .map((fwhost) => fwhost.trim())
+    .filter((fwhost) => !!fwhost)
+    .map((fwhost) => purgeOuter(fwhost, path, log))));
+
+  if (results.length === 0) {
+    return {
+      statusCode: 204,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: results,
+    };
+  }
+  if (!results.find((r) => r.status !== 'ok')) {
+    return {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: results,
+    };
+  }
+
   return {
-    body: `Hello, ${name}.`,
+    statusCode: 207,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: results,
   };
 }
 

@@ -11,13 +11,41 @@
  */
 
 /* eslint-env mocha */
-const assert = require('assert');
+/* eslint-disable no-unused-expressions */
+
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const packjson = require('../package.json');
+
+chai.use(chaiHttp);
+const { expect } = chai;
+
+function getbaseurl() {
+  const namespace = 'helix';
+  const package = 'helix-services';
+  const name = packjson.name.replace('@adobe/helix-', '');
+  let version = `${packjson.version}`;
+  if (process.env.CI && process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main') {
+    version = `ci${process.env.CIRCLE_BUILD_NUM}`;
+  }
+  return `api/v1/web/${namespace}/${package}/${name}@${version}`;
+}
 
 describe('Post-Deploy Tests', () => {
-  it('Service is ready for monitoring', () => {
-    assert.equal(
-      'Not yet, but I will change this line as soon as I am ready',
-      'I am ready to go on call for this',
-    );
-  });
+  it('Purge a blog post', async () => {
+    // eslint-disable-next-line no-console
+    console.log(`Trying https://adobeioruntime.net/${getbaseurl()}?host=theblog--adobe.hlx.page&xfh=blog.adobe.com&path=/en/2020/08/14/6-ways-ta-adapt-advance-your-business-during-pandemic.html`);
+
+    await chai
+      .request('https://adobeioruntime.net/')
+      .post(`${getbaseurl()}?host=theblog--adobe.hlx.page&xfh=blog.adobe.com&path=/en/2020/08/14/6-ways-ta-adapt-advance-your-business-during-pandemic.html`)
+      .then((response) => {
+        expect(response).to.have.status(200);
+        expect(response).to.be.json;
+        expect(response.body).to.be.an('array');
+        expect(response.body).to.have.a.lengthOf(2);
+      }).catch((e) => {
+        throw e;
+      });
+  }).timeout(50000);
 });

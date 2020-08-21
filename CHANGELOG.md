@@ -1,3 +1,22 @@
+## [1.0.1](https://github.com/adobe/helix-purge/compare/v1.0.0...v1.0.1) (2020-08-20)
+
+
+### Bug Fixes
+
+* **test:** do not assume master branch ([4612509](https://github.com/adobe/helix-purge/commit/4612509d69a490d47fe3dd39d8dd100b447f2925))
+
+# 1.0.0 (2020-08-19)
+
+
+### Bug Fixes
+
+* **index:** handle null case ([2b04bb8](https://github.com/adobe/helix-purge/commit/2b04bb8a71eaa8ebd851805851181dce1141ebbc))
+
+
+### Features
+
+* **purge:** purge inner and outer cdn ([4be7e10](https://github.com/adobe/helix-purge/commit/4be7e10da031a513e50830ac282e1979da6ec9ba))
+
 ## [1.8.49](https://github.com/adobe/helix-service/compare/v1.8.48...v1.8.49) (2020-08-11)
 
 
