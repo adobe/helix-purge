@@ -15,11 +15,23 @@
 process.env.HELIX_FETCH_FORCE_HTTP1 = 'true';
 const nock = require('nock');
 const assert = require('assert');
+const { logging } = require('@adobe/helix-testutils');
 const index = require('../src/index.js').main;
+
+/* eslint-disable no-underscore-dangle, camelcase */
+const __ow_logger = logging.createTestLogger();
 
 describe('Index Tests', () => {
   it('index function is present', async () => {
-    const result = await index({});
+    const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK');
+
+    const result = await index({
+      __ow_logger,
+    });
     assert.deepEqual(result, {
       body: [],
       statusCode: 204,
@@ -27,11 +39,26 @@ describe('Index Tests', () => {
         'Content-Type': 'application/json',
       },
     });
+
+    scope.done();
   });
 
-  it('index function returns an object', async () => {
-    const result = await index();
-    assert.equal(typeof result, 'object');
+  it('index function rejects purges when helix pages behaves funny', async () => {
+    const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'Not OK');
+
+    const result = await index({
+      __ow_logger,
+    });
+    assert.deepEqual(result, {
+      statusCode: 503,
+      body: 'Refusing to purge while Helix Pages responses are inconsistent. Check status.project-helix.io for details.',
+    });
+
+    scope.done();
   });
 
   afterEach(() => {
@@ -40,11 +67,16 @@ describe('Index Tests', () => {
 
   it('index function purges outer cdn', async () => {
     const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
       .intercept('/index.html', 'PURGE')
       .reply(200)
       .persist();
 
     const result = await index({
+      __ow_logger,
       xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
       path: '/index.html',
     });
@@ -59,12 +91,17 @@ describe('Index Tests', () => {
 
   it('index function purges outer cdn with partial failure', async () => {
     const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
       .intercept('/index.html', 'PURGE')
       .reply(200)
       .intercept('/index.html', 'PURGE')
       .reply(504);
 
     const result = await index({
+      __ow_logger,
       xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
       path: '/index.html',
     });
@@ -79,6 +116,10 @@ describe('Index Tests', () => {
 
   it('index function purges outer cdn and inner cdn', async () => {
     const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
       .intercept('/index.html', 'PURGE')
       .reply(200)
       .persist()
@@ -93,6 +134,7 @@ describe('Index Tests', () => {
       });
 
     const result = await index({
+      __ow_logger,
       xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
       path: '/index.html',
       host: 'theblog--adobe.hlx.page',
@@ -111,6 +153,10 @@ describe('Index Tests', () => {
 
   it('index function purges outer cdn and inner cdn (which fails)', async () => {
     const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
       .intercept('/index.html', 'PURGE')
       .reply(200)
       .persist()
@@ -125,6 +171,7 @@ describe('Index Tests', () => {
       });
 
     const result = await index({
+      __ow_logger,
       xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
       path: '/index.html',
       host: 'theblog--adobe.hlx.page',
