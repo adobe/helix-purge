@@ -11,6 +11,7 @@
  */
 const { equal } = require('assert');
 const { fetch } = require('@adobe/helix-fetch').context({
+  maxCacheSize: 0,
   httpsProtocols:
   /* istanbul ignore next */
     process.env.HELIX_FETCH_FORCE_HTTP1 ? ['http1'] : ['http2', 'http1'],
