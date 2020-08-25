@@ -24,9 +24,12 @@ async function commence(log) {
       fetch('https://main--helix-purge--adobe.hlx.page/ok.html'),
     ]);
 
+    const mdtext = (await mdres.text()).replace(/<meta.*/, '');
+    const htmltext = (await htmlres.text()).replace(/<meta.*/, '');
+
     equal(
-      await mdres.text().replace(/<meta.*/, ''),
-      await htmlres.text().replace(/<meta.*/, ''),
+      mdtext,
+      htmltext,
       'Pipeline and static are in sync',
     );
     equal(mdres.status, 200, 'Pipeline works');
