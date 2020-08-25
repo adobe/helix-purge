@@ -1,3 +1,18 @@
+# [1.1.0](https://github.com/adobe/helix-purge/compare/v1.0.1...v1.1.0) (2020-08-25)
+
+
+### Bug Fixes
+
+* **stop:** await text ([b05ee9f](https://github.com/adobe/helix-purge/commit/b05ee9ffa2d83664a6ab92c7661b4c5059be8b2d)), closes [#3](https://github.com/adobe/helix-purge/issues/3)
+* **stop:** no cache ([db5acdd](https://github.com/adobe/helix-purge/commit/db5acddc1897520b63632291a0a1bf8437320943))
+* **stop:** relax equality condition ([1868037](https://github.com/adobe/helix-purge/commit/18680379d942a73b89c14d2d29e05cfc50233e24)), closes [#3](https://github.com/adobe/helix-purge/issues/3)
+
+
+### Features
+
+* **stop:** add function for stop switch ([561181f](https://github.com/adobe/helix-purge/commit/561181f118af824e8adf69876399ba6bc77b02de)), closes [#3](https://github.com/adobe/helix-purge/issues/3)
+* **stop:** check status before purging ([efb1162](https://github.com/adobe/helix-purge/commit/efb11628f50cbd4e0f2eadaa3f84d7bc4ef30e82)), closes [#3](https://github.com/adobe/helix-purge/issues/3)
+
 ## [1.0.1](https://github.com/adobe/helix-purge/compare/v1.0.0...v1.0.1) (2020-08-20)
 
 
