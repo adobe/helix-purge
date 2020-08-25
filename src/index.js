@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Adobe. All rights reserved.
+ * Copyright 2020 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -20,6 +20,7 @@ const { fetch } = require('@adobe/helix-fetch').context({
   /* istanbul ignore next */
     process.env.HELIX_FETCH_FORCE_HTTP1 ? ['http1'] : ['http2', 'http1'],
 });
+const commence = require('./stop');
 
 async function purgeInner(host, path, service, token, log) {
   const url = `https://${host}${path}`;
@@ -60,6 +61,13 @@ async function main({
   host, xfh = '', path = '', HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN, __ow_logger: log,
 }) {
   const results = [];
+
+  if (!(await commence(log))) {
+    return {
+      statusCode: 503,
+      body: 'Refusing to purge while Helix Pages responses are inconsistent. Check status.project-helix.io for details.',
+    };
+  }
 
   if (host && HLX_PAGES_FASTLY_SVC_ID && HLX_PAGES_FASTLY_TOKEN) {
     results.push(await purgeInner(
