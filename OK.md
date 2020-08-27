@@ -1,1 +1,1 @@
-Helix Pages under investigation, purging paused!
+Helix Pages is **OK**, commence purging!
