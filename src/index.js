@@ -26,7 +26,7 @@ async function purgeInner(host, path, service, token, log) {
   const url = `https://${host}${path}`;
   try {
     const f = Fastly(token, service);
-    await f.purgeKeys([utils.computeSurrogateKey(url)]);
+    await f.purgeKeys([utils.computeSurrogateKey(url.replace(/\?.*$/, ''))]);
   } catch (e) {
     log.error('Unable to purge inner CDN', e);
     return { status: 'error', url };
