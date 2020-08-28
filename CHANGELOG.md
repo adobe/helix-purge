@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/adobe/helix-purge/compare/v1.1.0...v1.1.1) (2020-08-28)
+
+
+### Bug Fixes
+
+* **inner:** ignore url params when calculating surrogate key ([d274eae](https://github.com/adobe/helix-purge/commit/d274eae8b1a7a6b160d5490cb356312cd663b0b0))
+
 # [1.1.0](https://github.com/adobe/helix-purge/compare/v1.0.1...v1.1.0) (2020-08-25)
 
 
