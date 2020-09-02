@@ -71,21 +71,20 @@ describe('Index Tests', () => {
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
-      .intercept('/index.html', 'PURGE')
+      .intercept(/\/index.*/, 'PURGE')
       .reply(200)
       .persist();
 
     const result = await index({
       __ow_logger,
-      xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
+      xfh: 'blog.adobe.com',
       path: '/index.html',
     });
 
     scope.done();
     assert.equal(result.statusCode, 200);
     assert.deepEqual(result.body, [
-      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
-      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
+      { status: 'ok', urls: ['https://blog.adobe.com/index.html','https://blog.adobe.com/index'] },
     ]);
   }).timeout(5000);
 
@@ -96,6 +95,8 @@ describe('Index Tests', () => {
       .get('/ok.html')
       .reply(200, 'OK')
       .intercept('/index.html', 'PURGE')
+      .reply(200)
+      .intercept('/index', 'PURGE')
       .reply(200)
       .intercept('/index.html', 'PURGE')
       .reply(504);
@@ -109,7 +110,7 @@ describe('Index Tests', () => {
     scope.done();
     assert.equal(result.statusCode, 207);
     assert.deepEqual(result.body, [
-      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
+      { status: 'ok', urls: ['https://blog.adobe.com/index.html', 'https://blog.adobe.com/index'] },
       { status: 'error', url: 'https://theblog--adobe.hlx.page/index.html' },
     ]);
   }).timeout(5000);
@@ -120,7 +121,7 @@ describe('Index Tests', () => {
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
-      .intercept('/index.html', 'PURGE')
+      .intercept(/\/index.*/, 'PURGE')
       .reply(200)
       .persist()
       .post('/service/test-service/purge')
@@ -146,8 +147,7 @@ describe('Index Tests', () => {
     assert.equal(result.statusCode, 200);
     assert.deepEqual(result.body, [
       { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
-      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
-      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
+      { status: 'ok', urls: ['https://blog.adobe.com/index.html', 'https://blog.adobe.com/index'] },
     ]);
   }).timeout(5000);
 
@@ -157,7 +157,7 @@ describe('Index Tests', () => {
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
-      .intercept('/index.html', 'PURGE')
+      .intercept(/\/index.*/, 'PURGE')
       .reply(200)
       .persist()
       .post('/service/test-service/purge')
@@ -183,8 +183,7 @@ describe('Index Tests', () => {
     assert.equal(result.statusCode, 207);
     assert.deepEqual(result.body, [
       { status: 'error', url: 'https://theblog--adobe.hlx.page/index.html' },
-      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
-      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
+      { status: 'ok', urls: ['https://blog.adobe.com/index.html', 'https://blog.adobe.com/index'] },
     ]);
   }).timeout(5000);
 });
