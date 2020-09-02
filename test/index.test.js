@@ -84,7 +84,7 @@ describe('Index Tests', () => {
     scope.done();
     assert.equal(result.statusCode, 200);
     assert.deepEqual(result.body, [
-      { status: 'ok', urls: ['https://blog.adobe.com/index.html','https://blog.adobe.com/index'] },
+      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
     ]);
   }).timeout(5000);
 
@@ -110,7 +110,7 @@ describe('Index Tests', () => {
     scope.done();
     assert.equal(result.statusCode, 207);
     assert.deepEqual(result.body, [
-      { status: 'ok', urls: ['https://blog.adobe.com/index.html', 'https://blog.adobe.com/index'] },
+      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
       { status: 'error', url: 'https://theblog--adobe.hlx.page/index.html' },
     ]);
   }).timeout(5000);
@@ -147,7 +147,7 @@ describe('Index Tests', () => {
     assert.equal(result.statusCode, 200);
     assert.deepEqual(result.body, [
       { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
-      { status: 'ok', urls: ['https://blog.adobe.com/index.html', 'https://blog.adobe.com/index'] },
+      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
     ]);
   }).timeout(5000);
 
@@ -183,7 +183,7 @@ describe('Index Tests', () => {
     assert.equal(result.statusCode, 207);
     assert.deepEqual(result.body, [
       { status: 'error', url: 'https://theblog--adobe.hlx.page/index.html' },
-      { status: 'ok', urls: ['https://blog.adobe.com/index.html', 'https://blog.adobe.com/index'] },
+      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
     ]);
   }).timeout(5000);
 });
