@@ -88,6 +88,72 @@ describe('Index Tests', () => {
     ]);
   }).timeout(5000);
 
+  it('index function also purges outer cdn without html extension', async () => {
+    const purgedUrls = [];
+    const spyLogger = Object.assign(
+      __ow_logger,
+      {
+        info: (msg, url) => {
+          purgedUrls.push(url);
+        },
+      },
+    );
+    const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
+      .intercept(/\/en\/topics\/news.*/, 'PURGE')
+      .twice()
+      .reply(200);
+
+    const result = await index({
+      __ow_logger: spyLogger,
+      xfh: 'blog.adobe.com',
+      path: '/en/topics/news.html',
+    });
+
+    scope.done();
+    assert.equal(result.statusCode, 200);
+    assert.deepEqual(purgedUrls, [
+      'https://blog.adobe.com/en/topics/news.html',
+      'https://blog.adobe.com/en/topics/news',
+    ]);
+  }).timeout(5000);
+
+  it('index function also purges outer cdn with html extension if missing', async () => {
+    const purgedUrls = [];
+    const spyLogger = Object.assign(
+      __ow_logger,
+      {
+        info: (msg, url) => {
+          purgedUrls.push(url);
+        },
+      },
+    );
+    const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
+      .intercept(/\/en\/topics\/creativity.*/, 'PURGE')
+      .twice()
+      .reply(200);
+
+    const result = await index({
+      __ow_logger: spyLogger,
+      xfh: 'blog.adobe.com',
+      path: '/en/topics/creativity',
+    });
+
+    scope.done();
+    assert.equal(result.statusCode, 200);
+    assert.deepEqual(purgedUrls, [
+      'https://blog.adobe.com/en/topics/creativity',
+      'https://blog.adobe.com/en/topics/creativity.html',
+    ]);
+  }).timeout(5000);
+
   it('index function purges outer cdn with partial failure', async () => {
     const scope = nock(/./)
       .get('/OK.html')
