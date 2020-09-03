@@ -14,12 +14,14 @@
 
 process.env.HELIX_FETCH_FORCE_HTTP1 = 'true';
 const nock = require('nock');
+const sinon = require('sinon');
 const assert = require('assert');
 const { logging } = require('@adobe/helix-testutils');
 const index = require('../src/index.js').main;
 
 /* eslint-disable no-underscore-dangle, camelcase */
 const __ow_logger = logging.createTestLogger();
+const infoSpy = sinon.spy(__ow_logger, 'info');
 
 describe('Index Tests', () => {
   it('index function is present', async () => {
@@ -71,13 +73,13 @@ describe('Index Tests', () => {
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
-      .intercept('/index.html', 'PURGE')
+      .intercept(/\/index.*/, 'PURGE')
       .reply(200)
       .persist();
 
     const result = await index({
       __ow_logger,
-      xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
+      xfh: 'blog.adobe.com',
       path: '/index.html',
     });
 
@@ -85,8 +87,77 @@ describe('Index Tests', () => {
     assert.equal(result.statusCode, 200);
     assert.deepEqual(result.body, [
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
-      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
     ]);
+  }).timeout(5000);
+
+  it('index function also purges outer cdn without html extension', async () => {
+    const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
+      .intercept(/\/en\/topics\/news.*/, 'PURGE')
+      .twice()
+      .reply(200);
+
+    infoSpy.resetHistory();
+    const result = await index({
+      __ow_logger,
+      xfh: 'blog.adobe.com',
+      path: '/en/topics/news.html',
+    });
+
+    scope.done();
+    assert.equal(result.statusCode, 200);
+    assert.ok(infoSpy.calledTwice);
+    assert.ok(infoSpy.calledWithExactly('Purging', 'https://blog.adobe.com/en/topics/news.html'));
+    assert.ok(infoSpy.calledWithExactly('Purging', 'https://blog.adobe.com/en/topics/news'));
+  }).timeout(5000);
+
+  it('index function also purges outer cdn with html extension if extension is missing', async () => {
+    const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
+      .intercept(/\/en\/topics\/creativity.*/, 'PURGE')
+      .twice()
+      .reply(200);
+
+    infoSpy.resetHistory();
+    const result = await index({
+      __ow_logger,
+      xfh: 'blog.adobe.com',
+      path: '/en/topics/creativity',
+    });
+
+    scope.done();
+    assert.equal(result.statusCode, 200);
+    assert.ok(infoSpy.calledTwice);
+    assert.ok(infoSpy.calledWithExactly('Purging', 'https://blog.adobe.com/en/topics/creativity'));
+    assert.ok(infoSpy.calledWithExactly('Purging', 'https://blog.adobe.com/en/topics/creativity.html'));
+  }).timeout(5000);
+
+  it('index function does not purge outer cdn without extension if non-html', async () => {
+    const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
+      .intercept('/feed.xml', 'PURGE')
+      .once()
+      .reply(200);
+
+    infoSpy.resetHistory();
+    const result = await index({
+      __ow_logger,
+      xfh: 'blog.adobe.com',
+      path: '/feed.xml',
+    });
+
+    scope.done();
+    assert.equal(result.statusCode, 200);
+    assert.ok(infoSpy.calledOnceWithExactly('Purging', 'https://blog.adobe.com/feed.xml'));
   }).timeout(5000);
 
   it('index function purges outer cdn with partial failure', async () => {
@@ -96,6 +167,8 @@ describe('Index Tests', () => {
       .get('/ok.html')
       .reply(200, 'OK')
       .intercept('/index.html', 'PURGE')
+      .reply(200)
+      .intercept('/index', 'PURGE')
       .reply(200)
       .intercept('/index.html', 'PURGE')
       .reply(504);
@@ -120,7 +193,7 @@ describe('Index Tests', () => {
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
-      .intercept('/index.html', 'PURGE')
+      .intercept(/\/index.*/, 'PURGE')
       .reply(200)
       .persist()
       .post('/service/test-service/purge')
@@ -147,7 +220,6 @@ describe('Index Tests', () => {
     assert.deepEqual(result.body, [
       { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
-      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
     ]);
   }).timeout(5000);
 
@@ -157,7 +229,7 @@ describe('Index Tests', () => {
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
-      .intercept('/index.html', 'PURGE')
+      .intercept(/\/index.*/, 'PURGE')
       .reply(200)
       .persist()
       .post('/service/test-service/purge')
@@ -184,7 +256,6 @@ describe('Index Tests', () => {
     assert.deepEqual(result.body, [
       { status: 'error', url: 'https://theblog--adobe.hlx.page/index.html' },
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
-      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
     ]);
   }).timeout(5000);
 });

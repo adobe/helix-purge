@@ -34,7 +34,7 @@ async function purgeInner(host, path, service, token, log) {
   return { status: 'ok', url };
 }
 
-async function purgeOuter(host, path, log) {
+async function purgeOuter(host, path, log, exact) {
   const url = `https://${host}${path}`;
   log.info('Purging', url);
   try {
@@ -48,6 +48,15 @@ async function purgeOuter(host, path, log) {
   } catch (e) {
     log.error('Unable to purge outer CDN', e);
     return { status: 'error', url };
+  }
+  if (!exact) {
+    if (path.endsWith('.html')) {
+      // if .html extension, also purge URL without it
+      await purgeOuter(host, path.substring(0, path.lastIndexOf('.')), log, true);
+    } else if (!path.split('/').pop().includes('.')) {
+      // if no extension, also purge URL with .html extension
+      await purgeOuter(host, `${path}.html`, log, true);
+    }
   }
   return { status: 'ok', url };
 }
@@ -85,6 +94,7 @@ async function main({
     .split(',')
     .map((fwhost) => fwhost.trim())
     .filter((fwhost) => !!fwhost)
+    .filter((fwhost) => fwhost !== host) // skip inner CDN host
     .map((fwhost) => purgeOuter(fwhost, path, log))));
 
   if (results.length === 0) {
