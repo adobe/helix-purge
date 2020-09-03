@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/adobe/helix-purge/compare/v1.1.4...v1.2.0) (2020-09-03)
+
+
+### Features
+
+* **purge:** purge outer URLs with and without html ([1375eb6](https://github.com/adobe/helix-purge/commit/1375eb66915d098095ed0f9d6b1fb3403fa4ef38))
+* **purge:** purge outer with and without html extension and vice versa ([4021dc4](https://github.com/adobe/helix-purge/commit/4021dc420403d6e4d34c1315fbf625debe15b081))
+
 ## [1.1.4](https://github.com/adobe/helix-purge/compare/v1.1.3...v1.1.4) (2020-09-03)
 
 
