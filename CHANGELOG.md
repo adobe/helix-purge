@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/adobe/helix-purge/compare/v1.1.2...v1.1.3) (2020-09-03)
+
+
+### Bug Fixes
+
+* **deps:** update [@adobe](https://github.com/adobe) fixes ([#11](https://github.com/adobe/helix-purge/issues/11)) ([fa0c035](https://github.com/adobe/helix-purge/commit/fa0c0353b6cc72b6ba48ae535f7cc36bfc6d5a25))
+
 ## [1.1.2](https://github.com/adobe/helix-purge/compare/v1.1.1...v1.1.2) (2020-08-31)
 
 
