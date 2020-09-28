@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/adobe/helix-purge/compare/v1.2.5...v1.2.6) (2020-09-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-epsagon to v1.5.3 ([#27](https://github.com/adobe/helix-purge/issues/27)) ([35610b0](https://github.com/adobe/helix-purge/commit/35610b092f522a768c8e38ff0aa93f6402b16ce9))
+
 ## [1.2.5](https://github.com/adobe/helix-purge/compare/v1.2.4...v1.2.5) (2020-09-21)
 
 
