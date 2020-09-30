@@ -1,3 +1,10 @@
+## [1.2.9](https://github.com/adobe/helix-purge/compare/v1.2.8...v1.2.9) (2020-09-30)
+
+
+### Bug Fixes
+
+* breaking change in pipeline returns altered output for main section ([#31](https://github.com/adobe/helix-purge/issues/31)) ([597937a](https://github.com/adobe/helix-purge/commit/597937a4c0c07c02b4865980aa78b5929bb08289))
+
 ## [1.2.8](https://github.com/adobe/helix-purge/compare/v1.2.7...v1.2.8) (2020-09-30)
 
 
