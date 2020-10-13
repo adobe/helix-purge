@@ -1,3 +1,10 @@
+## [1.2.13](https://github.com/adobe/helix-purge/compare/v1.2.12...v1.2.13) (2020-10-13)
+
+
+### Bug Fixes
+
+* new default design altered output ([#37](https://github.com/adobe/helix-purge/issues/37)) ([4cd4548](https://github.com/adobe/helix-purge/commit/4cd45480243548e2799a68ee52620534080900da))
+
 ## [1.2.12](https://github.com/adobe/helix-purge/compare/v1.2.11...v1.2.12) (2020-10-12)
 
 
