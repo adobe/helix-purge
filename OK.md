@@ -1,1 +1,1 @@
-Helix Pages is **OK**, commence purging!
+Helix Pages is not **OK**, I/O runtime is responding with 429
