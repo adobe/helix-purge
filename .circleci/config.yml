@@ -75,7 +75,6 @@ jobs:
           statuspage_name: Helix Purge
           statuspage_group: Publishing
           newrelic_group_policy: Publishing Repeated Failure
-          incubator: true # remove only when promoting service to production
 
   branch-deploy:
     executor: node10
