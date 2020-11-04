@@ -1,2 +1,3 @@
 mountpoints:
   /gdrive: https://drive.google.com/drive/folders/1oXe1ERJrZuXpJsNEyqUsqCnKzxmQ2j7O
+  /onedrive: https://adobe.sharepoint.com/:f:/r/sites/cg-helix/Shared%20Documents/purge-service?csf=1&web=1&e=cqW4Tf
