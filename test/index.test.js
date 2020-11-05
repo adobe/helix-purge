@@ -258,4 +258,41 @@ describe('Index Tests', () => {
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
     ]);
   }).timeout(5000);
+
+  it('index function sanitizes x-forwarded-host before purging outer cdn', async () => {
+    const scope = nock(/./)
+      .get('/OK.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
+      .intercept(/\/index.*/, 'PURGE')
+      .reply(200)
+      .persist()
+      .post('/service/test-service/purge')
+      .reply((_, body) => {
+        assert.deepEqual(body, {
+          surrogate_keys: [
+            '3XuSp2sTopNwWfAN',
+          ],
+        });
+        return [200, { '3XuSp2sTopNwWfAN': '19940-1591821325-42118515' }];
+      });
+
+    const result = await index({
+      __ow_logger,
+      xfh: 'blog.adobe.com, theblog--adobe.hlx.live, theblog--adobe.hlx.live, , theblog--adobe.hlx.page',
+      path: '/index.html',
+      host: 'theblog--adobe.hlx.page',
+      HLX_PAGES_FASTLY_SVC_ID: 'test-service',
+      HLX_PAGES_FASTLY_TOKEN: 'dummy',
+    });
+
+    scope.done();
+    assert.equal(result.statusCode, 200);
+    assert.deepEqual(result.body, [
+      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
+      { status: 'ok', url: 'https://blog.adobe.com/index.html' },
+      { status: 'ok', url: 'https://theblog--adobe.hlx.live/index.html' },
+    ]);
+  }).timeout(5000);
 });
