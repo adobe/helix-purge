@@ -89,12 +89,11 @@ async function main({
   } else {
     log.warn(`Not purging inner CDN for ${host}${path} due to missing fastly credentials`);
   }
-
-  results.push(...await Promise.all(xfh
+  results.push(...await Promise.all(Array.from(new Set(xfh
     .split(',')
     .map((fwhost) => fwhost.trim())
     .filter((fwhost) => !!fwhost)
-    .filter((fwhost) => fwhost !== host) // skip inner CDN host
+    .filter((fwhost) => fwhost !== host))) // skip inner CDN host
     .map((fwhost) => purgeOuter(fwhost, path, log))));
 
   if (results.length === 0) {
