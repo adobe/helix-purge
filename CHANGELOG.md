@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/adobe/helix-purge/compare/v1.2.13...v1.3.0) (2020-11-05)
+
+
+### Features
+
+* **purge:** dedupe xfh before purging outer cdn ([9495673](https://github.com/adobe/helix-purge/commit/94956734f09bd9e7ea17ed316be52d1d7ddbd258))
+
 ## [1.2.13](https://github.com/adobe/helix-purge/compare/v1.2.12...v1.2.13) (2020-10-13)
 
 
