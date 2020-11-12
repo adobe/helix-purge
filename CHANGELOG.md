@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/adobe/helix-purge/compare/v1.3.1...v1.3.2) (2020-11-12)
+
+
+### Bug Fixes
+
+* replace branch name with main ([#51](https://github.com/adobe/helix-purge/issues/51)) ([c2ec081](https://github.com/adobe/helix-purge/commit/c2ec08167195dc959ecf066163dc09fc6a0095b0))
+
 ## [1.3.1](https://github.com/adobe/helix-purge/compare/v1.3.0...v1.3.1) (2020-11-09)
 
 
