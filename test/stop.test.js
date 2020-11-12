@@ -21,7 +21,7 @@ const commence = require('../src/stop.js');
 describe('Purge-Stop Tests', () => {
   it('Stop for unexpected results', async () => {
     const scope = nock('https://main--helix-purge--adobe.hlx.page')
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(404, 'OK');
@@ -29,9 +29,19 @@ describe('Purge-Stop Tests', () => {
     scope.done();
   });
 
+  it('Stop for different results', async () => {
+    const scope = nock('https://main--helix-purge--adobe.hlx.page')
+      .get('/OK.plain.html')
+      .reply(200, 'Not OK')
+      .get('/ok.html')
+      .reply(200, 'OK');
+    assert.ok(!(await commence(logging.createTestLogger())));
+    scope.done();
+  });
+
   it('Commence for expected results', async () => {
     const scope = nock('https://main--helix-purge--adobe.hlx.page')
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK');

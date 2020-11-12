@@ -26,7 +26,7 @@ const infoSpy = sinon.spy(__ow_logger, 'info');
 describe('Index Tests', () => {
   it('index function is present', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK');
@@ -43,11 +43,11 @@ describe('Index Tests', () => {
     });
 
     scope.done();
-  });
+  }).timeout(10000);
 
   it('index function rejects purges when helix pages behaves funny', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'Not OK');
@@ -69,7 +69,7 @@ describe('Index Tests', () => {
 
   it('index function purges outer cdn', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
@@ -92,7 +92,7 @@ describe('Index Tests', () => {
 
   it('index function also purges outer cdn without html extension', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
@@ -116,7 +116,7 @@ describe('Index Tests', () => {
 
   it('index function also purges outer cdn with html extension if extension is missing', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
@@ -140,7 +140,7 @@ describe('Index Tests', () => {
 
   it('index function does not purge outer cdn without extension if non-html', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
@@ -162,7 +162,7 @@ describe('Index Tests', () => {
 
   it('index function purges outer cdn with partial failure', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
@@ -189,7 +189,7 @@ describe('Index Tests', () => {
 
   it('index function purges outer cdn and inner cdn', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
@@ -225,7 +225,7 @@ describe('Index Tests', () => {
 
   it('index function purges outer cdn and inner cdn (which fails)', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
@@ -261,7 +261,7 @@ describe('Index Tests', () => {
 
   it('index function sanitizes x-forwarded-host before purging outer cdn', async () => {
     const scope = nock(/./)
-      .get('/OK.html')
+      .get('/OK.plain.html')
       .reply(200, 'OK')
       .get('/ok.html')
       .reply(200, 'OK')
