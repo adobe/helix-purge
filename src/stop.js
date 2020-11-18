@@ -20,12 +20,12 @@ const { fetch } = require('@adobe/helix-fetch').context({
 async function commence(log) {
   try {
     const [mdres, htmlres] = await Promise.all([
-      fetch('https://main--helix-purge--adobe.hlx.page/OK.html'),
+      fetch('https://main--helix-purge--adobe.hlx.page/OK.plain.html'),
       fetch('https://main--helix-purge--adobe.hlx.page/ok.html'),
     ]);
 
-    const mdtext = (await mdres.text()).replace(/<meta.*/, '');
-    const htmltext = (await htmlres.text()).replace(/<meta.*/, '');
+    const mdtext = await mdres.text();
+    const htmltext = await htmlres.text();
 
     equal(
       mdtext,
