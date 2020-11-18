@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/adobe/helix-purge/compare/v1.3.3...v1.4.0) (2020-11-18)
+
+
+### Features
+
+* **commence:** check plain html rendering ([e0a7a6e](https://github.com/adobe/helix-purge/commit/e0a7a6e5662c7fe3b5d4d88b3c3da76f53e1f591))
+
 ## [1.3.3](https://github.com/adobe/helix-purge/compare/v1.3.2...v1.3.3) (2020-11-13)
 
 

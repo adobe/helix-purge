@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-purge",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "private": true,
   "description": "Helix Purge",
   "main": "src/index.js",
