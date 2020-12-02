@@ -1,3 +1,10 @@
+## [1.4.6](https://github.com/adobe/helix-purge/compare/v1.4.5...v1.4.6) (2020-12-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/openwhisk-action-utils to v4.3.3 ([#64](https://github.com/adobe/helix-purge/issues/64)) ([118d24d](https://github.com/adobe/helix-purge/commit/118d24d5e294500a89890256358a481520ec6eb5))
+
 ## [1.4.5](https://github.com/adobe/helix-purge/compare/v1.4.4...v1.4.5) (2020-12-01)
 
 
