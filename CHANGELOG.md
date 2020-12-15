@@ -1,3 +1,10 @@
+## [1.4.13](https://github.com/adobe/helix-purge/compare/v1.4.12...v1.4.13) (2020-12-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/openwhisk-action-logger to v2.3.0 ([0fb88b1](https://github.com/adobe/helix-purge/commit/0fb88b11c00009735e34f3d0b13a1c7dbcb3959b))
+
 ## [1.4.12](https://github.com/adobe/helix-purge/compare/v1.4.11...v1.4.12) (2020-12-10)
 
 
