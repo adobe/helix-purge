@@ -1,3 +1,10 @@
+## [1.4.14](https://github.com/adobe/helix-purge/compare/v1.4.13...v1.4.14) (2020-12-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/fastly-native-promises to v1.18.0 ([#75](https://github.com/adobe/helix-purge/issues/75)) ([7e1c0e9](https://github.com/adobe/helix-purge/commit/7e1c0e97a521926026cbd96074c8045a6609991d))
+
 ## [1.4.13](https://github.com/adobe/helix-purge/compare/v1.4.12...v1.4.13) (2020-12-15)
 
 
