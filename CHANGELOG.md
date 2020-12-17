@@ -1,3 +1,10 @@
+## [1.4.15](https://github.com/adobe/helix-purge/compare/v1.4.14...v1.4.15) (2020-12-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-status to v9 ([#77](https://github.com/adobe/helix-purge/issues/77)) ([35da6d6](https://github.com/adobe/helix-purge/commit/35da6d6cf8506ee542e066aa5452ff623d6d71f2))
+
 ## [1.4.14](https://github.com/adobe/helix-purge/compare/v1.4.13...v1.4.14) (2020-12-16)
 
 
