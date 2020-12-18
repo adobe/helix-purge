@@ -34,7 +34,7 @@ describe('Index Tests', () => {
     const result = await index({
       __ow_logger,
     });
-    assert.deepEqual(result, {
+    assert.deepStrictEqual(result, {
       body: [],
       statusCode: 204,
       headers: {
@@ -55,9 +55,15 @@ describe('Index Tests', () => {
     const result = await index({
       __ow_logger,
     });
-    assert.deepEqual(result, {
+    assert.deepStrictEqual(result, {
       statusCode: 503,
-      body: 'Refusing to purge while Helix Pages responses are inconsistent. Check status.project-helix.io for details.',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        status: 'error',
+        message: 'Refusing to purge while Helix Pages responses are inconsistent. Check status.project-helix.io for details.',
+      },
     });
 
     scope.done();
@@ -84,8 +90,8 @@ describe('Index Tests', () => {
     });
 
     scope.done();
-    assert.equal(result.statusCode, 200);
-    assert.deepEqual(result.body, [
+    assert.strictEqual(result.statusCode, 200);
+    assert.deepStrictEqual(result.body, [
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
     ]);
   }).timeout(5000);
@@ -108,7 +114,7 @@ describe('Index Tests', () => {
     });
 
     scope.done();
-    assert.equal(result.statusCode, 200);
+    assert.strictEqual(result.statusCode, 200);
     assert.ok(infoSpy.calledTwice);
     assert.ok(infoSpy.calledWithExactly('Purging', 'https://blog.adobe.com/en/topics/news.html'));
     assert.ok(infoSpy.calledWithExactly('Purging', 'https://blog.adobe.com/en/topics/news'));
@@ -132,7 +138,7 @@ describe('Index Tests', () => {
     });
 
     scope.done();
-    assert.equal(result.statusCode, 200);
+    assert.strictEqual(result.statusCode, 200);
     assert.ok(infoSpy.calledTwice);
     assert.ok(infoSpy.calledWithExactly('Purging', 'https://blog.adobe.com/en/topics/creativity'));
     assert.ok(infoSpy.calledWithExactly('Purging', 'https://blog.adobe.com/en/topics/creativity.html'));
@@ -156,7 +162,7 @@ describe('Index Tests', () => {
     });
 
     scope.done();
-    assert.equal(result.statusCode, 200);
+    assert.strictEqual(result.statusCode, 200);
     assert.ok(infoSpy.calledOnceWithExactly('Purging', 'https://blog.adobe.com/feed.xml'));
   }).timeout(5000);
 
@@ -180,8 +186,8 @@ describe('Index Tests', () => {
     });
 
     scope.done();
-    assert.equal(result.statusCode, 207);
-    assert.deepEqual(result.body, [
+    assert.strictEqual(result.statusCode, 207);
+    assert.deepStrictEqual(result.body, [
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
       { status: 'error', url: 'https://theblog--adobe.hlx.page/index.html' },
     ]);
@@ -198,7 +204,7 @@ describe('Index Tests', () => {
       .persist()
       .post('/service/test-service/purge')
       .reply((_, body) => {
-        assert.deepEqual(body, {
+        assert.deepStrictEqual(body, {
           surrogate_keys: [
             '3XuSp2sTopNwWfAN',
           ],
@@ -216,8 +222,8 @@ describe('Index Tests', () => {
     });
 
     scope.done();
-    assert.equal(result.statusCode, 200);
-    assert.deepEqual(result.body, [
+    assert.strictEqual(result.statusCode, 200);
+    assert.deepStrictEqual(result.body, [
       { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
     ]);
@@ -234,7 +240,7 @@ describe('Index Tests', () => {
       .persist()
       .post('/service/test-service/purge')
       .reply((_, body) => {
-        assert.deepEqual(body, {
+        assert.deepStrictEqual(body, {
           surrogate_keys: [
             '3XuSp2sTopNwWfAN',
           ],
@@ -252,8 +258,8 @@ describe('Index Tests', () => {
     });
 
     scope.done();
-    assert.equal(result.statusCode, 207);
-    assert.deepEqual(result.body, [
+    assert.strictEqual(result.statusCode, 207);
+    assert.deepStrictEqual(result.body, [
       { status: 'error', url: 'https://theblog--adobe.hlx.page/index.html' },
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
     ]);
@@ -270,7 +276,7 @@ describe('Index Tests', () => {
       .persist()
       .post('/service/test-service/purge')
       .reply((_, body) => {
-        assert.deepEqual(body, {
+        assert.deepStrictEqual(body, {
           surrogate_keys: [
             '3XuSp2sTopNwWfAN',
           ],
@@ -288,8 +294,8 @@ describe('Index Tests', () => {
     });
 
     scope.done();
-    assert.equal(result.statusCode, 200);
-    assert.deepEqual(result.body, [
+    assert.strictEqual(result.statusCode, 200);
+    assert.deepStrictEqual(result.body, [
       { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
       { status: 'ok', url: 'https://theblog--adobe.hlx.live/index.html' },

@@ -74,7 +74,13 @@ async function main({
   if (!(await commence(log))) {
     return {
       statusCode: 503,
-      body: 'Refusing to purge while Helix Pages responses are inconsistent. Check status.project-helix.io for details.',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        status: 'error',
+        message: 'Refusing to purge while Helix Pages responses are inconsistent. Check status.project-helix.io for details.',
+      },
     };
   }
 
