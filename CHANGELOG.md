@@ -1,3 +1,10 @@
+## [1.4.16](https://github.com/adobe/helix-purge/compare/v1.4.15...v1.4.16) (2020-12-21)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#76](https://github.com/adobe/helix-purge/issues/76)) ([3ab33b5](https://github.com/adobe/helix-purge/commit/3ab33b59984b71f31e0a26a485965c9ca93aa945))
+
 ## [1.4.15](https://github.com/adobe/helix-purge/compare/v1.4.14...v1.4.15) (2020-12-17)
 
 
