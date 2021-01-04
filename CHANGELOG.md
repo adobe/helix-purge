@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/adobe/helix-purge/compare/v1.4.16...v1.5.0) (2021-01-04)
+
+
+### Features
+
+* **purge:** always return json ([a16c2b3](https://github.com/adobe/helix-purge/commit/a16c2b3d79d4cd4d99fdc79903e3cf70c1004748))
+
 ## [1.4.16](https://github.com/adobe/helix-purge/compare/v1.4.15...v1.4.16) (2020-12-21)
 
 
