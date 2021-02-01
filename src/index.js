@@ -15,11 +15,14 @@ const { wrap: status } = require('@adobe/helix-status');
 const { epsagon } = require('@adobe/helix-epsagon');
 const Fastly = require('@adobe/fastly-native-promises');
 const { utils } = require('@adobe/helix-shared');
-const { fetch } = require('@adobe/helix-fetch').context({
-  httpsProtocols:
+const fetchAPI = require('@adobe/helix-fetch');
+
+const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
   /* istanbul ignore next */
-    process.env.HELIX_FETCH_FORCE_HTTP1 ? ['http1'] : ['http2', 'http1'],
-});
+  ? fetchAPI.context({
+    alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
+  })
+  : fetchAPI;
 const commence = require('./stop');
 
 async function purgeInner(host, path, service, token, log) {

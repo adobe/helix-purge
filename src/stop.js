@@ -10,12 +10,14 @@
  * governing permissions and limitations under the License.
  */
 const { equal } = require('assert');
-const { fetch } = require('@adobe/helix-fetch').context({
-  maxCacheSize: 0,
-  httpsProtocols:
+const fetchAPI = require('@adobe/helix-fetch');
+
+const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
   /* istanbul ignore next */
-    process.env.HELIX_FETCH_FORCE_HTTP1 ? ['http1'] : ['http2', 'http1'],
-});
+  ? fetchAPI.context({
+    alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
+  })
+  : fetchAPI;
 
 async function commence(log) {
   try {
