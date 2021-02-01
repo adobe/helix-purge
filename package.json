@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/adobe/helix-purge#readme",
   "dependencies": {
-    "@adobe/fastly-native-promises": "1.19.6",
+    "@adobe/fastly-native-promises": "adobe/fastly-native-promises#console-log-requests",
     "@adobe/helix-epsagon": "1.5.6",
     "@adobe/helix-fetch": "2.1.0",
     "@adobe/helix-shared": "7.19.2",
