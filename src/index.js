@@ -17,6 +17,8 @@ const Fastly = require('@adobe/fastly-native-promises');
 const { utils } = require('@adobe/helix-shared');
 const fetchAPI = require('@adobe/helix-fetch');
 
+process.env.HELIX_FETCH_FORCE_HTTP1 = 'true';
+
 /* istanbul ignore next */
 const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
 
