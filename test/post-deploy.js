@@ -38,7 +38,7 @@ describe('Post-Deploy Tests', () => {
 
     await chai
       .request('https://adobeioruntime.net/')
-      .post(`${getbaseurl()}?host=theblog--adobe.hlx.page&xfh=blog.adobe.com&path=/en/2020/08/14/6-ways-ta-adapt-advance-your-business-during-pandemic.html`)
+      .post(`${getbaseurl()}?host=theblog--adobe.hlx.page&xfh=blog.adobe.com&path=/en/publish/2020/08/14/6-ways-ta-adapt-advance-your-business-during-pandemic.html`)
       .then((response) => {
         expect(response).to.have.status(200);
         expect(response).to.be.json;
