@@ -12,8 +12,8 @@
 const { equal } = require('assert');
 const fetchAPI = require('@adobe/helix-fetch');
 
+/* istanbul ignore next */
 const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
-  /* istanbul ignore next */
   ? fetchAPI.context({
     alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
   })
