@@ -34,13 +34,14 @@ function retry(num, log) {
       try {
         // eslint-disable-next-line no-await-in-loop
         const res = await fn();
+        log.debug(`Succeeding after ${attempt} attempts`);
         return res;
       } catch (e) {
         attempt += 1;
         if (attempt >= num) {
+          log.debug(`Failing after ${attempt} attempts`);
           throw e;
         }
-        log.debug('Trying again', attempt);
       }
     }
   };
@@ -52,7 +53,7 @@ async function purgeInner(host, path, service, token, log) {
     const f = Fastly(token, service);
     const surrogateKey = utils.computeSurrogateKey(url.replace(/\?.*$/, ''));
     log.info('Purging inner CDN with surrogate key', surrogateKey);
-    await retry(10)(() => f.purgeKeys([surrogateKey]));
+    await retry(10, log)(() => f.purgeKeys([surrogateKey]));
   } catch (e) {
     log.error('Unable to purge inner CDN', e);
     return { status: 'error', url };
