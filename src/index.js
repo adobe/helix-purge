@@ -19,7 +19,7 @@ const fetchAPI = require('@adobe/helix-fetch');
 
 /* istanbul ignore next */
 const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
-  
+
   ? fetchAPI.context({
     alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
   })
