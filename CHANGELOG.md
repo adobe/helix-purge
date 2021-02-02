@@ -1,3 +1,11 @@
+## [1.5.13](https://github.com/adobe/helix-purge/compare/v1.5.12...v1.5.13) (2021-02-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/fastly-native-promises to v1.19.6 ([bffd3eb](https://github.com/adobe/helix-purge/commit/bffd3eb8521236a0a1d0685f3d4e311ca652a70a))
+* **retry:** pass logger ([b238442](https://github.com/adobe/helix-purge/commit/b238442553e3d992277b2c6b0d8125907915be9a))
+
 ## [1.5.12](https://github.com/adobe/helix-purge/compare/v1.5.11...v1.5.12) (2021-02-01)
 
 
