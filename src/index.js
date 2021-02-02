@@ -15,18 +15,45 @@ const { wrap: status } = require('@adobe/helix-status');
 const { epsagon } = require('@adobe/helix-epsagon');
 const Fastly = require('@adobe/fastly-native-promises');
 const { utils } = require('@adobe/helix-shared');
-const { fetch } = require('@adobe/helix-fetch').context({
-  httpsProtocols:
-  /* istanbul ignore next */
-    process.env.HELIX_FETCH_FORCE_HTTP1 ? ['http1'] : ['http2', 'http1'],
-});
+const fetchAPI = require('@adobe/helix-fetch');
+
+/* istanbul ignore next */
+const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
+
+  ? fetchAPI.context({
+    alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
+  })
+  : fetchAPI;
 const commence = require('./stop');
+
+function retry(num, log) {
+  let attempt = 0;
+  return async (fn) => {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const res = await fn();
+        log.debug(`Succeeding after ${attempt} attempts`);
+        return res;
+      } catch (e) {
+        attempt += 1;
+        if (attempt >= num) {
+          log.debug(`Failing after ${attempt} attempts`);
+          throw e;
+        }
+      }
+    }
+  };
+}
 
 async function purgeInner(host, path, service, token, log) {
   const url = `https://${host}${path}`;
   try {
     const f = Fastly(token, service);
-    await f.purgeKeys([utils.computeSurrogateKey(url.replace(/\?.*$/, ''))]);
+    const surrogateKey = utils.computeSurrogateKey(url.replace(/\?.*$/, ''));
+    log.info('Purging inner CDN with surrogate key', surrogateKey);
+    await retry(10, log)(() => f.purgeKeys([surrogateKey]));
   } catch (e) {
     log.error('Unable to purge inner CDN', e);
     return { status: 'error', url };
