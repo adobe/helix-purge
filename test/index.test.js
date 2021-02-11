@@ -17,7 +17,10 @@ const nock = require('nock');
 const sinon = require('sinon');
 const assert = require('assert');
 const { logging } = require('@adobe/helix-testutils');
-const index = require('../src/index.js').main;
+const { main } = require('../src/index.js');
+const { retrofit } = require('./utils.js');
+
+const index = retrofit(main);
 
 /* eslint-disable no-underscore-dangle, camelcase */
 const __ow_logger = logging.createTestLogger();
@@ -38,7 +41,7 @@ describe('Index Tests', () => {
       body: [],
       statusCode: 204,
       headers: {
-        'Content-Type': 'application/json',
+        'content-type': 'application/json',
       },
     });
 
@@ -58,7 +61,7 @@ describe('Index Tests', () => {
     assert.deepStrictEqual(result, {
       statusCode: 503,
       headers: {
-        'Content-Type': 'application/json',
+        'content-type': 'application/json',
       },
       body: {
         status: 'error',
@@ -217,6 +220,7 @@ describe('Index Tests', () => {
       xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
       path: '/index.html',
       host: 'theblog--adobe.hlx.page',
+    }, {
       HLX_PAGES_FASTLY_SVC_ID: 'test-service',
       HLX_PAGES_FASTLY_TOKEN: 'dummy',
     });
@@ -253,6 +257,7 @@ describe('Index Tests', () => {
       xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
       path: '/index.html',
       host: 'theblog--adobe.hlx.page',
+    }, {
       HLX_PAGES_FASTLY_SVC_ID: 'test-service',
       HLX_PAGES_FASTLY_TOKEN: 'dummy',
     });
@@ -289,6 +294,7 @@ describe('Index Tests', () => {
       xfh: 'blog.adobe.com, theblog--adobe.hlx.live, theblog--adobe.hlx.live, , theblog--adobe.hlx.page',
       path: '/index.html',
       host: 'theblog--adobe.hlx.page',
+    }, {
       HLX_PAGES_FASTLY_SVC_ID: 'test-service',
       HLX_PAGES_FASTLY_TOKEN: 'dummy',
     });

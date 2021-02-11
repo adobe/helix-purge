@@ -12,13 +12,12 @@
 const { wrap } = require('@adobe/openwhisk-action-utils');
 const { logger } = require('@adobe/openwhisk-action-logger');
 const { wrap: status } = require('@adobe/helix-status');
-const { epsagon } = require('@adobe/helix-epsagon');
 const Fastly = require('@adobe/fastly-native-promises');
 const { utils } = require('@adobe/helix-shared');
 const fetchAPI = require('@adobe/helix-fetch');
 
 /* istanbul ignore next */
-const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
+const { fetch, Response } = process.env.HELIX_FETCH_FORCE_HTTP1
 
   ? fetchAPI.context({
     alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
@@ -90,25 +89,31 @@ async function purgeOuter(host, path, log, exact) {
 
 /**
  * This is the main function
- * @param {string} name name of the person to greet
- * @returns {object} a greeting
+ * @param {Request} req The Request
+ * @param {Context} context The context
+ * @returns {Promise<Response>} The response
  */
-async function main({
-  host, xfh = '', path = '', HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN, __ow_logger: log,
-}) {
+async function main(req, context) {
+  const { searchParams } = new URL(req.url);
+  const host = searchParams.get('host');
+  const path = searchParams.get('path') || '';
+  const xfh = searchParams.get('xfh') || '';
+
+  const { env, log } = context;
+  const { HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN } = env;
+
   const results = [];
 
   if (!(await commence(log))) {
-    return {
-      statusCode: 503,
+    return new Response(JSON.stringify({
+      status: 'error',
+      message: 'Refusing to purge while Helix Pages responses are inconsistent. Check status.project-helix.io for details.',
+    }), {
+      status: 503,
       headers: {
         'Content-Type': 'application/json',
       },
-      body: {
-        status: 'error',
-        message: 'Refusing to purge while Helix Pages responses are inconsistent. Check status.project-helix.io for details.',
-      },
-    };
+    });
   }
 
   if (host && HLX_PAGES_FASTLY_SVC_ID && HLX_PAGES_FASTLY_TOKEN) {
@@ -130,35 +135,31 @@ async function main({
     .map((fwhost) => purgeOuter(fwhost, path, log))));
 
   if (results.length === 0) {
-    return {
-      statusCode: 204,
+    return new Response(JSON.stringify(results), {
+      status: 204,
       headers: {
         'Content-Type': 'application/json',
       },
-      body: results,
-    };
+    });
   }
   if (!results.find((r) => r.status !== 'ok')) {
-    return {
-      statusCode: 200,
+    return new Response(JSON.stringify(results), {
+      status: 200,
       headers: {
         'Content-Type': 'application/json',
       },
-      body: results,
-    };
+    });
   }
 
-  return {
-    statusCode: 207,
+  return new Response(JSON.stringify(results), {
+    status: 207,
     headers: {
       'Content-Type': 'application/json',
     },
-    body: results,
-  };
+  });
 }
 
 module.exports.main = wrap(main)
-  .with(epsagon)
   .with(status)
   .with(logger.trace)
   .with(logger);
