@@ -25,27 +25,6 @@ const { fetch, Response } = process.env.HELIX_FETCH_FORCE_HTTP1
   : fetchAPI;
 const commence = require('./stop');
 
-function retry(num, log) {
-  let attempt = 0;
-  return async (fn) => {
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const res = await fn();
-        log.info(`Succeeding after ${attempt} attempts`);
-        return res;
-      } catch (e) {
-        attempt += 1;
-        if (attempt >= num) {
-          log.info(`Failing after ${attempt} attempts`);
-          throw e;
-        }
-      }
-    }
-  };
-}
-
 async function purgeInner(host, path, service, token, log) {
   const url = `https://${host}${path}`;
   try {
