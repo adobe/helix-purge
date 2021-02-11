@@ -1,3 +1,10 @@
+## [1.5.14](https://github.com/adobe/helix-purge/compare/v1.5.13...v1.5.14) (2021-02-11)
+
+
+### Bug Fixes
+
+* **index:** use universal runtime api ([65cd3c0](https://github.com/adobe/helix-purge/commit/65cd3c0aa036700443e43ff02e4897f0607ccb1d)), closes [#102](https://github.com/adobe/helix-purge/issues/102)
+
 ## [1.5.13](https://github.com/adobe/helix-purge/compare/v1.5.12...v1.5.13) (2021-02-02)
 
 
