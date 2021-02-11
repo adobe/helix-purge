@@ -205,15 +205,8 @@ describe('Index Tests', () => {
       .intercept(/\/index.*/, 'PURGE')
       .reply(200)
       .persist()
-      .post('/service/test-service/purge')
-      .reply((_, body) => {
-        assert.deepStrictEqual(body, {
-          surrogate_keys: [
-            '3XuSp2sTopNwWfAN',
-          ],
-        });
-        return [200, { '3XuSp2sTopNwWfAN': '19940-1591821325-42118515' }];
-      });
+      .post('/service/test-service/purge/3XuSp2sTopNwWfAN')
+      .reply(() => [200, { '3XuSp2sTopNwWfAN': '19940-1591821325-42118515' }]);
 
     const result = await index({
       __ow_logger,
@@ -242,15 +235,8 @@ describe('Index Tests', () => {
       .intercept(/\/index.*/, 'PURGE')
       .reply(200)
       .persist()
-      .post('/service/test-service/purge')
-      .reply((_, body) => {
-        assert.deepStrictEqual(body, {
-          surrogate_keys: [
-            '3XuSp2sTopNwWfAN',
-          ],
-        });
-        return [504, { '3XuSp2sTopNwWfAN': '19940-1591821325-42118515' }];
-      });
+      .post('/service/test-service/purge/3XuSp2sTopNwWfAN')
+      .reply(() => [504, { '3XuSp2sTopNwWfAN': '19940-1591821325-42118515' }]);
 
     const result = await index({
       __ow_logger,
@@ -279,15 +265,8 @@ describe('Index Tests', () => {
       .intercept(/\/index.*/, 'PURGE')
       .reply(200)
       .persist()
-      .post('/service/test-service/purge')
-      .reply((_, body) => {
-        assert.deepStrictEqual(body, {
-          surrogate_keys: [
-            '3XuSp2sTopNwWfAN',
-          ],
-        });
-        return [200, { '3XuSp2sTopNwWfAN': '19940-1591821325-42118515' }];
-      });
+      .post('/service/test-service/purge/3XuSp2sTopNwWfAN')
+      .reply(() => [200, { '3XuSp2sTopNwWfAN': '19940-1591821325-42118515' }]);
 
     const result = await index({
       __ow_logger,
