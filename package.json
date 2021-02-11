@@ -32,11 +32,10 @@
   },
   "homepage": "https://github.com/adobe/helix-purge#readme",
   "dependencies": {
-    "@adobe/fastly-native-promises": "1.19.6",
-    "@adobe/helix-epsagon": "1.5.6",
-    "@adobe/helix-fetch": "2.1.0",
+    "@adobe/fastly-native-promises": "1.19.11",
+    "@adobe/helix-fetch": "2.1.3",
     "@adobe/helix-shared": "7.19.2",
-    "@adobe/helix-status": "9.0.0",
+    "@adobe/helix-status": "9.0.2",
     "@adobe/openwhisk-action-logger": "2.3.1",
     "@adobe/openwhisk-action-utils": "4.4.0"
   },
