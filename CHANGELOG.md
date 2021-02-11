@@ -1,3 +1,11 @@
+## [1.5.15](https://github.com/adobe/helix-purge/compare/v1.5.14...v1.5.15) (2021-02-11)
+
+
+### Bug Fixes
+
+* remove unused function ([085daa9](https://github.com/adobe/helix-purge/commit/085daa9a8bb35d22a31bedadbddcb67a622f7b50))
+* use purgeKey instead of purgeKeys ([cfb9e16](https://github.com/adobe/helix-purge/commit/cfb9e16e1d1c964be069f2e5259ff83da839dfe4))
+
 ## [1.5.14](https://github.com/adobe/helix-purge/compare/v1.5.13...v1.5.14) (2021-02-11)
 
 
