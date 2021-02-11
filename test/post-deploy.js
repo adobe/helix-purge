@@ -15,37 +15,30 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const packjson = require('../package.json');
+const { createTargets } = require('./post-deploy-utils.js');
 
 chai.use(chaiHttp);
 const { expect } = chai;
 
-function getbaseurl() {
-  const namespace = 'helix';
-  const package = 'helix-services';
-  const name = packjson.name.replace('@adobe/helix-', '');
-  let version = `${packjson.version}`;
-  if (process.env.CI && process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main') {
-    version = `ci${process.env.CIRCLE_BUILD_NUM}`;
-  }
-  return `api/v1/web/${namespace}/${package}/${name}@${version}`;
-}
+createTargets().forEach((target) => {
+  describe('Post-Deploy Tests', () => {
+    let url;
 
-describe('Post-Deploy Tests', () => {
-  it('Purge a blog post', async () => {
-    // eslint-disable-next-line no-console
-    console.log(`Trying https://adobeioruntime.net/${getbaseurl()}?host=theblog--adobe.hlx.page&xfh=blog.adobe.com&path=/en/2020/08/14/6-ways-ta-adapt-advance-your-business-during-pandemic.html`);
+    it(`Purge a blog post (${target.title()})`, async () => {
+      await chai
+        .request(target.host())
+        .post(`${target.urlPath()}?host=theblog--adobe.hlx.page&xfh=blog.adobe.com&path=/en/publish/2020/08/14/6-ways-ta-adapt-advance-your-business-during-pandemic.html`)
+        .then((response) => {
+          url = response.request.url;
 
-    await chai
-      .request('https://adobeioruntime.net/')
-      .post(`${getbaseurl()}?host=theblog--adobe.hlx.page&xfh=blog.adobe.com&path=/en/publish/2020/08/14/6-ways-ta-adapt-advance-your-business-during-pandemic.html`)
-      .then((response) => {
-        expect(response).to.have.status(200);
-        expect(response).to.be.json;
-        expect(response.body).to.be.an('array');
-        expect(response.body).to.have.a.lengthOf(2);
-      }).catch((e) => {
-        throw e;
-      });
-  }).timeout(50000);
+          expect(response).to.have.status(200);
+          expect(response).to.be.json;
+          expect(response.body).to.be.an('array');
+          expect(response.body).to.have.a.lengthOf(2);
+        }).catch((e) => {
+          e.message = `At ${url}\n      ${e.message}`;
+          throw e;
+        });
+    }).timeout(50000);
+  });
 });
