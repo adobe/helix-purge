@@ -29,7 +29,7 @@ function retrofit(fn) {
     });
     return {
       statusCode: resp.status,
-      body: JSON.parse(await resp.text()),
+      body: await resp.json(),
       headers: resp.headers.plain(),
     };
   };
