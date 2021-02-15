@@ -46,9 +46,10 @@ async function purgeOuter(host, path, log, exact) {
     const res = await fetch(url, {
       method: 'PURGE',
     });
-    log.debug(await res.text());
+    const msg = await res.text();
+    log.debug(msg);
     if (!res.ok) {
-      throw new Error(await res.text());
+      throw new Error(msg);
     }
   } catch (e) {
     log.error('Unable to purge outer CDN', e);
