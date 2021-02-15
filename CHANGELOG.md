@@ -1,3 +1,10 @@
+## [1.5.16](https://github.com/adobe/helix-purge/compare/v1.5.15...v1.5.16) (2021-02-15)
+
+
+### Bug Fixes
+
+* **deps:** bump deps ([284ed3f](https://github.com/adobe/helix-purge/commit/284ed3fe3556053b032710834082417b2a53397c))
+
 ## [1.5.15](https://github.com/adobe/helix-purge/compare/v1.5.14...v1.5.15) (2021-02-11)
 
 
