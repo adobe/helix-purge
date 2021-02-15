@@ -1,3 +1,10 @@
+## [1.5.17](https://github.com/adobe/helix-purge/compare/v1.5.16...v1.5.17) (2021-02-15)
+
+
+### Bug Fixes
+
+* **index:** fix "TypeError: Already read" ([a92325f](https://github.com/adobe/helix-purge/commit/a92325f8fd262a0a79ca42ed4d1923933d1e9e0f))
+
 ## [1.5.16](https://github.com/adobe/helix-purge/compare/v1.5.15...v1.5.16) (2021-02-15)
 
 
