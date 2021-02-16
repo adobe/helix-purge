@@ -22,8 +22,8 @@ const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
 async function commence(log) {
   try {
     const [mdres, htmlres] = await Promise.all([
-      fetch('https://main--helix-purge--adobe.hlx.page/OK.plain.html'),
-      fetch('https://main--helix-purge--adobe.hlx.page/ok.html'),
+      fetch('https://main--helix-purge--adobe.hlx.page/OK.plain.html', { cache: 'no-store' }),
+      fetch('https://main--helix-purge--adobe.hlx.page/ok.html', { cache: 'no-store' }),
     ]);
 
     const mdtext = await mdres.text();
