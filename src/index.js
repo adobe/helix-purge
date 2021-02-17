@@ -111,7 +111,6 @@ async function main(req, context) {
     .split(',')
     .map((fwhost) => fwhost.trim())
     .filter((fwhost) => !!fwhost)
-    .filter((fwhost) => fwhost !== host))) // skip inner CDN host
     .map((fwhost) => purgeOuter(fwhost, path, log))));
 
   if (results.length === 0) {
