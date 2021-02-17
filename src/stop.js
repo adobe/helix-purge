@@ -20,10 +20,17 @@ const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
   : fetchAPI;
 
 async function commence(log) {
+  // fetch options
+  const options = {
+    cache: 'no-store', // disable client-side cache
+    headers: {
+      'cache-control': 'no-cache', // prevent runtime from caching the related invocation
+    },
+  };
   try {
     const [mdres, htmlres] = await Promise.all([
-      fetch('https://main--helix-purge--adobe.hlx.page/OK.plain.html'),
-      fetch('https://main--helix-purge--adobe.hlx.page/ok.html'),
+      fetch('https://main--helix-purge--adobe.hlx.page/OK.plain.html', options),
+      fetch('https://main--helix-purge--adobe.hlx.page/ok.html', options),
     ]);
 
     const mdtext = await mdres.text();
