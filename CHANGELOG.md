@@ -1,3 +1,11 @@
+## [1.5.19](https://github.com/adobe/helix-purge/compare/v1.5.18...v1.5.19) (2021-02-17)
+
+
+### Bug Fixes
+
+* disable cache for pre-flight check ([d206b10](https://github.com/adobe/helix-purge/commit/d206b10b5b5d921be81250526131e288edcd9dcf))
+* disable runtime cache ([2252684](https://github.com/adobe/helix-purge/commit/2252684a53f9e3da0f71ee797cb0757aff743004))
+
 ## [1.5.18](https://github.com/adobe/helix-purge/compare/v1.5.17...v1.5.18) (2021-02-17)
 
 
