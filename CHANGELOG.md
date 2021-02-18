@@ -1,3 +1,11 @@
+## [1.5.20](https://github.com/adobe/helix-purge/compare/v1.5.19...v1.5.20) (2021-02-18)
+
+
+### Bug Fixes
+
+* **index:** do not dedupe the inner cdn purge ([2a74afd](https://github.com/adobe/helix-purge/commit/2a74afd2845a50dd109c1adf61ac368dbe963e0a)), closes [#112](https://github.com/adobe/helix-purge/issues/112)
+* **index:** syntax error ([8984e12](https://github.com/adobe/helix-purge/commit/8984e127478060d02ce65773c95dee352a1102bb))
+
 ## [1.5.19](https://github.com/adobe/helix-purge/compare/v1.5.18...v1.5.19) (2021-02-17)
 
 
