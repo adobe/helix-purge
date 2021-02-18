@@ -223,6 +223,7 @@ describe('Index Tests', () => {
     assert.deepStrictEqual(result.body, [
       { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
+      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
     ]);
   }).timeout(5000);
 
@@ -253,6 +254,7 @@ describe('Index Tests', () => {
     assert.deepStrictEqual(result.body, [
       { status: 'error', url: 'https://theblog--adobe.hlx.page/index.html' },
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
+      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
     ]);
   }).timeout(5000);
 
@@ -284,6 +286,7 @@ describe('Index Tests', () => {
       { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
       { status: 'ok', url: 'https://blog.adobe.com/index.html' },
       { status: 'ok', url: 'https://theblog--adobe.hlx.live/index.html' },
+      { status: 'ok', url: 'https://theblog--adobe.hlx.page/index.html' },
     ]);
   }).timeout(5000);
 });

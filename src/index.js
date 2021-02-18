@@ -110,8 +110,7 @@ async function main(req, context) {
   results.push(...await Promise.all(Array.from(new Set(xfh
     .split(',')
     .map((fwhost) => fwhost.trim())
-    .filter((fwhost) => !!fwhost)
-    .filter((fwhost) => fwhost !== host))) // skip inner CDN host
+    .filter((fwhost) => !!fwhost)))
     .map((fwhost) => purgeOuter(fwhost, path, log))));
 
   if (results.length === 0) {
