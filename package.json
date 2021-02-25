@@ -33,7 +33,7 @@
   "homepage": "https://github.com/adobe/helix-purge#readme",
   "dependencies": {
     "@adobe/fastly-native-promises": "1.19.13",
-    "@adobe/helix-fetch": "2.1.5",
+    "@adobe/helix-fetch": "2.1.6",
     "@adobe/helix-shared": "7.19.11",
     "@adobe/helix-status": "9.0.5",
     "@adobe/openwhisk-action-logger": "2.4.1",
