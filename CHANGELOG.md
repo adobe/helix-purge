@@ -1,3 +1,10 @@
+## [1.5.24](https://github.com/adobe/helix-purge/compare/v1.5.23...v1.5.24) (2021-02-25)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#120](https://github.com/adobe/helix-purge/issues/120)) ([7ae6c3f](https://github.com/adobe/helix-purge/commit/7ae6c3fe1448d19d8c2526ad72f3101e5e34dd4f))
+
 ## [1.5.23](https://github.com/adobe/helix-purge/compare/v1.5.22...v1.5.23) (2021-02-22)
 
 
