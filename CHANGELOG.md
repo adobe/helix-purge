@@ -1,3 +1,10 @@
+## [1.5.26](https://github.com/adobe/helix-purge/compare/v1.5.25...v1.5.26) (2021-02-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-fetch to v2.1.6 ([#122](https://github.com/adobe/helix-purge/issues/122)) ([5b0ba82](https://github.com/adobe/helix-purge/commit/5b0ba82f086834d55e97a352541e5d7c972c560b))
+
 ## [1.5.25](https://github.com/adobe/helix-purge/compare/v1.5.24...v1.5.25) (2021-02-25)
 
 
