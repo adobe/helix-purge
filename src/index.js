@@ -42,6 +42,7 @@ async function purgeInner(host, path, service, token, log) {
 async function purgeOuter(host, path, log, exact) {
   const url = `https://${host}${path}`;
   log.info('Purging', url);
+  const results = [];
   try {
     const res = await fetch(url, {
       method: 'PURGE',
@@ -51,20 +52,32 @@ async function purgeOuter(host, path, log, exact) {
     if (!res.ok) {
       throw new Error(msg);
     }
+    results.push({ status: 'ok', url });
   } catch (e) {
     log.error('Unable to purge outer CDN', e);
     return { status: 'error', url };
   }
   if (!exact) {
-    if (path.endsWith('.html')) {
-      // if .html extension, also purge URL without it
-      await purgeOuter(host, path.substring(0, path.lastIndexOf('.')), log, true);
-    } else if (!path.split('/').pop().includes('.')) {
-      // if no extension, also purge URL with .html extension
-      await purgeOuter(host, `${path}.html`, log, true);
+    const file = path.split('/').pop();
+    if (!file) {
+      // directory, also purge index(.html)
+      results.push(await purgeOuter(host, `${path}index`, log, true));
+      results.push(await purgeOuter(host, `${path}index.html`, log, true));
+    } else {
+      if (file.match(/index\.?/)) {
+        // index(.html), also purge directory
+        results.push(await purgeOuter(host, path.substring(0, path.lastIndexOf('/') + 1), log, true));
+      }
+      if (file.endsWith('.html')) {
+        // file with .html extension, also purge without extension
+        results.push(await purgeOuter(host, path.substring(0, path.lastIndexOf('.')), log, true));
+      } else if (!file.includes('.')) {
+        // file without extension, also purge with .html extension
+        results.push(await purgeOuter(host, `${path}.html`, log, true));
+      }
     }
   }
-  return { status: 'ok', url };
+  return results.length === 1 ? results[0] : results;
 }
 
 /**
@@ -82,7 +95,7 @@ async function main(req, context) {
   const { env, log } = context;
   const { HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN } = env;
 
-  const results = [];
+  let results = [];
 
   if (!(await commence(log))) {
     return new Response(JSON.stringify({
@@ -112,6 +125,7 @@ async function main(req, context) {
     .map((fwhost) => fwhost.trim())
     .filter((fwhost) => !!fwhost)))
     .map((fwhost) => purgeOuter(fwhost, path, log))));
+  results = results.flat(2);
 
   if (results.length === 0) {
     return new Response(JSON.stringify(results), {
