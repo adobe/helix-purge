@@ -106,7 +106,7 @@ async function purgeOuter(host, path, log, exact) {
       results.push(await purgeOuter(host, `${path}index`, log, true));
       results.push(await purgeOuter(host, `${path}index.html`, log, true));
     } else {
-      if (file.match(/index\.?/)) {
+      if (file === 'index' || file === 'index.html') {
         // index(.html), also purge directory
         results.push(await purgeOuter(host, path.substring(0, path.lastIndexOf('/') + 1), log, true));
       }
