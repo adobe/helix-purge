@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/adobe/helix-purge#readme",
   "dependencies": {
-    "@adobe/fastly-native-promises": "1.20.0",
+    "@adobe/fastly-native-promises": "1.21.0",
     "@adobe/helix-fetch": "2.1.6",
     "@adobe/helix-shared": "7.20.0",
     "@adobe/helix-status": "9.0.6",
