@@ -25,18 +25,60 @@ const { fetch, Response } = process.env.HELIX_FETCH_FORCE_HTTP1
   : fetchAPI;
 const commence = require('./stop');
 
+function getMdUrl(host, path, log) {
+  let mdPath;
+  const file = path.split('/').pop();
+  if (file.endsWith('.html')) {
+    mdPath = path.replace(/\.html$/, '.md');
+  } else if (!file.contains('.')) {
+    mdPath = `${path}.md`;
+  }
+  if (!mdPath) {
+    log.debug('not an html document, so no markdown purging required');
+    return null;
+  }
+  const ghDetails = host.split('.')[0].split('--');
+  if (ghDetails.length < 2) {
+    log.warn('invalid inner cdn url');
+    return null;
+  }
+  const owner = ghDetails.pop();
+  const repo = ghDetails.pop();
+  const branch = ghDetails[0] || 'master';
+  return `https://${branch}--${repo}--${owner}.hlx.page${mdPath}`;
+}
+
 async function purgeInner(host, path, service, token, log) {
+  const results = [];
+  const mdUrl = getMdUrl(host, path, log);
+  if (mdUrl) {
+    try {
+      const res = await fetch(mdUrl, {
+        method: 'PURGE',
+      });
+      const msg = await res.text();
+      log.debug(msg);
+      if (!res.ok) {
+        throw new Error(msg);
+      }
+      results.push({ status: 'ok', url: mdUrl });
+    } catch (e) {
+      log.error('Unable to purge content proxy', e);
+      return { status: 'error', mdUrl };
+    }
+  }
   const url = `https://${host}${path}`;
   try {
     const f = Fastly(token, service);
     const surrogateKey = utils.computeSurrogateKey(url.replace(/\?.*$/, ''));
     log.info('Purging inner CDN with surrogate key', surrogateKey);
     await f.purgeKey(surrogateKey);
+    results.push({ status: 'ok', url });
   } catch (e) {
     log.error('Unable to purge inner CDN', e);
-    return { status: 'error', url };
+    results.push({ status: 'error', url });
   }
-  return { status: 'ok', url };
+  return results.length === 1 ? results[0] : results;
 }
 
 async function purgeOuter(host, path, log, exact) {

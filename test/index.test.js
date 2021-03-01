@@ -224,12 +224,16 @@ describe('Index Tests', () => {
     scope.done();
     assert.strictEqual(result.statusCode, 200);
     assert.strictEqual(
-      result.body.filter((r) => r.status === 'ok' && r.url.includes('blog.adobe.com')).length,
+      result.body.filter((r) => r.status === 'ok' && r.url.startsWith('https://blog.adobe.com')).length,
       3, '3 URLs successfully purged on blog.adobe.com',
     );
     assert.strictEqual(
-      result.body.filter((r) => r.status === 'ok' && r.url.includes('theblog--adobe.hlx.page')).length,
+      result.body.filter((r) => r.status === 'ok' && r.url.startsWith('https://theblog--adobe.hlx.page')).length,
       4, '4 URLs successfully purged on theblog--adobe.hlx.page',
+    );
+    assert.strictEqual(
+      result.body.filter((r) => r.status === 'ok' && r.url.endsWith('.md')).length,
+      1, '1 markdown URL successfully purged',
     );
   }).timeout(5000);
 
@@ -257,10 +261,10 @@ describe('Index Tests', () => {
 
     scope.done();
     assert.strictEqual(result.statusCode, 207);
-    assert.strictEqual(result.body.length, 7);
+    assert.strictEqual(result.body.length, 8);
     assert.strictEqual(
       result.body.filter((r) => r.status === 'ok').length,
-      6, '6 URLs successfully purged',
+      7, '7 URLs successfully purged',
     );
     assert.ok(
       result.body.some((r) => r.status === 'error' && r.url.includes('theblog--adobe.hlx.page')),
@@ -292,6 +296,6 @@ describe('Index Tests', () => {
 
     scope.done();
     assert.strictEqual(result.statusCode, 200);
-    assert.strictEqual(result.body.length, 10, '10 URLS purged');
+    assert.strictEqual(result.body.length, 11, '10 URLS purged');
   }).timeout(5000);
 });
