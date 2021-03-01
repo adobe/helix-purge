@@ -16,6 +16,7 @@ process.env.HELIX_FETCH_FORCE_HTTP1 = 'true';
 const nock = require('nock');
 const assert = require('assert');
 const { logging } = require('@adobe/helix-testutils');
+const { utils } = require('@adobe/helix-shared');
 const { main } = require('../src/index.js');
 const { retrofit } = require('./utils.js');
 
@@ -199,43 +200,55 @@ describe('Index Tests', () => {
     ]);
   }).timeout(5000);
 
-  it('index function purges outer cdn and inner cdn', async () => {
-    const scope = nock(/./)
-      .get('/OK.plain.html')
-      .reply(200, 'OK')
-      .get('/ok.html')
-      .reply(200, 'OK')
-      .intercept(/.*/, 'PURGE')
-      .reply(200)
-      .persist()
-      .post('/service/test-service/purge/3XuSp2sTopNwWfAN')
-      .reply(() => [200, { '3XuSp2sTopNwWfAN': '19940-1591821325-42118515' }]);
+  [
+    ['/', 4, 3, 1], // also purge /index(.html) and /index.md
+    ['/index.html', 4, 3, 1], // also purge / and /index and /index.md
+    ['/index', 4, 3, 1], // also purge / and /index.html and /index.md
+    ['/foo.html', 3, 2, 1], // also purge /foo and /foo.md
+    ['/foo', 3, 2, 1], // also purge /foo.html and /foo.md
+    ['/foo.json', 2, 1, 0], // only purge /foo.json
+  ].forEach(([path, numInner, numOuter, numMd]) => {
+    it(`index function purges outer cdn and inner cdn for ${path}`, async () => {
+      const surrogateKey = utils.computeSurrogateKey(`https://theblog--adobe.hlx.page${path}`);
+      const fastlyResponse = {};
+      fastlyResponse[surrogateKey] = '19940-1591821325-42118515';
+      const scope = nock(/./)
+        .get('/OK.plain.html')
+        .reply(200, 'OK')
+        .get('/ok.html')
+        .reply(200, 'OK')
+        .intercept(/.*/, 'PURGE')
+        .reply(200)
+        .persist()
+        .post(`/service/test-service/purge/${surrogateKey}`)
+        .reply(() => [200, fastlyResponse]);
 
-    const result = await index({
-      __ow_logger,
-      xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
-      path: '/index.html',
-      host: 'theblog--adobe.hlx.page',
-    }, {
-      HLX_PAGES_FASTLY_SVC_ID: 'test-service',
-      HLX_PAGES_FASTLY_TOKEN: 'dummy',
-    });
+      const result = await index({
+        __ow_logger,
+        xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
+        path,
+        host: 'theblog--adobe.hlx.page',
+      }, {
+        HLX_PAGES_FASTLY_SVC_ID: 'test-service',
+        HLX_PAGES_FASTLY_TOKEN: 'dummy',
+      });
 
-    scope.done();
-    assert.strictEqual(result.statusCode, 200);
-    assert.strictEqual(
-      result.body.filter((r) => r.status === 'ok' && r.url.startsWith('https://blog.adobe.com')).length,
-      3, '3 URLs successfully purged on blog.adobe.com',
-    );
-    assert.strictEqual(
-      result.body.filter((r) => r.status === 'ok' && r.url.startsWith('https://theblog--adobe.hlx.page')).length,
-      4, '4 URLs successfully purged on theblog--adobe.hlx.page',
-    );
-    assert.strictEqual(
-      result.body.filter((r) => r.status === 'ok' && r.url.endsWith('.md')).length,
-      1, '1 markdown URL successfully purged',
-    );
-  }).timeout(5000);
+      scope.done();
+      assert.strictEqual(result.statusCode, 200);
+      assert.strictEqual(
+        result.body.filter((r) => r.status === 'ok' && r.url.startsWith('https://theblog--adobe.hlx.page')).length,
+        numInner, `${numInner} url(s) purged on inner cdn`,
+      );
+      assert.strictEqual(
+        result.body.filter((r) => r.status === 'ok' && r.url.startsWith('https://blog.adobe.com')).length,
+        numOuter, `${numOuter} url(s) purged on outer cdn`,
+      );
+      assert.strictEqual(
+        result.body.filter((r) => r.status === 'ok' && r.url.endsWith('.md')).length,
+        numMd, `${numMd} markdown url(s) purged`,
+      );
+    }).timeout(5000);
+  });
 
   it('index function purges outer cdn and inner cdn (which fails)', async () => {
     const scope = nock(/./)
@@ -296,6 +309,52 @@ describe('Index Tests', () => {
 
     scope.done();
     assert.strictEqual(result.statusCode, 200);
-    assert.strictEqual(result.body.length, 11, '10 URLS purged');
+    assert.strictEqual(result.body.length, 11, '11 urls purged');
+  }).timeout(5000);
+
+  it('index function gracefully handles failed markdown purge', async () => {
+    const scope = nock(/./)
+      .get('/OK.plain.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK')
+      .intercept('/foo.md', 'PURGE')
+      .reply(500)
+      .post(/.*/)
+      .reply(() => [200, { '3XuSp2sTopNwWfAN': '19940-1591821325-42118515' }]);
+
+    const result = await index({
+      __ow_logger,
+      path: '/foo.html',
+      host: 'theblog--adobe.hlx.page',
+    }, {
+      HLX_PAGES_FASTLY_SVC_ID: 'test-service',
+      HLX_PAGES_FASTLY_TOKEN: 'dummy',
+    });
+
+    scope.done();
+    assert.strictEqual(result.statusCode, 207);
+    assert.ok(result.body.some((r) => r.status === 'error' && r.url.endsWith('.md')), 'purging markdown failed');
+  }).timeout(5000);
+
+  it('index function fails gracefully on invalid host', async () => {
+    const scope = nock(/./)
+      .get('/OK.plain.html')
+      .reply(200, 'OK')
+      .get('/ok.html')
+      .reply(200, 'OK');
+
+    const result = await index({
+      __ow_logger,
+      path: '/foo.html',
+      host: 'theblog.hlx.page',
+    }, {
+      HLX_PAGES_FASTLY_SVC_ID: 'test-service',
+      HLX_PAGES_FASTLY_TOKEN: 'dummy',
+    });
+
+    scope.done();
+    assert.strictEqual(result.body.length, 1, '1 url purged');
+    assert.ok(result.body.some((r) => r.status === 'error'), 'purging invalid host failed');
   }).timeout(5000);
 });
