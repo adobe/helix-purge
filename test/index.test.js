@@ -201,13 +201,91 @@ describe('Index Tests', () => {
   }).timeout(5000);
 
   [
-    ['/', 4, 3, 1], // also purge /index(.html) and /index.md
-    ['/index.html', 4, 3, 1], // also purge / and /index and /index.md
-    ['/index', 4, 3, 1], // also purge / and /index.html and /index.md
-    ['/foo.html', 3, 2, 1], // also purge /foo and /foo.md
-    ['/foo', 3, 2, 1], // also purge /foo.html and /foo.md
-    ['/foo.json', 2, 1, 0], // only purge /foo.json
-  ].forEach(([path, numInner, numOuter, numMd]) => {
+    {
+      path: '/',
+      spec: '/ also purges /index and /index.html and /index.md',
+      purgeUrls: [
+        'https://master--theblog--adobe.hlx.page/index.md',
+        'https://theblog--adobe.hlx.page/',
+        'https://blog.adobe.com/',
+        'https://blog.adobe.com/index',
+        'https://blog.adobe.com/index.html',
+        'https://theblog--adobe.hlx.page/',
+        'https://theblog--adobe.hlx.page/index',
+        'https://theblog--adobe.hlx.page/index.html',
+      ],
+    },
+    {
+      path: '/index.html',
+      spec: '/index.html also purges / and /index and /index.md',
+      purgeUrls: [
+        'https://master--theblog--adobe.hlx.page/index.md',
+        'https://theblog--adobe.hlx.page/index.html',
+        'https://blog.adobe.com/index.html',
+        'https://blog.adobe.com/',
+        'https://blog.adobe.com/index',
+        'https://theblog--adobe.hlx.page/index.html',
+        'https://theblog--adobe.hlx.page/',
+        'https://theblog--adobe.hlx.page/index',
+      ],
+    },
+    {
+      path: '/index',
+      spec: '/index also purges / and /index.html and /index.md',
+      purgeUrls: [
+        'https://master--theblog--adobe.hlx.page/index.md',
+        'https://theblog--adobe.hlx.page/index',
+        'https://blog.adobe.com/index',
+        'https://blog.adobe.com/',
+        'https://blog.adobe.com/index.html',
+        'https://theblog--adobe.hlx.page/index',
+        'https://theblog--adobe.hlx.page/',
+        'https://theblog--adobe.hlx.page/index.html',
+      ],
+    },
+    {
+      path: '/foo.html',
+      spec: '/foo.html also purges /foo and /foo.md',
+      purgeUrls: [
+        'https://master--theblog--adobe.hlx.page/foo.md',
+        'https://theblog--adobe.hlx.page/foo.html',
+        'https://blog.adobe.com/foo.html',
+        'https://blog.adobe.com/foo',
+        'https://theblog--adobe.hlx.page/foo.html',
+        'https://theblog--adobe.hlx.page/foo',
+      ],
+    },
+    {
+      path: '/foo',
+      spec: '/foo also purges /foo.html and /foo.md',
+      purgeUrls: [
+        'https://master--theblog--adobe.hlx.page/foo.md',
+        'https://theblog--adobe.hlx.page/foo',
+        'https://blog.adobe.com/foo',
+        'https://blog.adobe.com/foo.html',
+        'https://theblog--adobe.hlx.page/foo',
+        'https://theblog--adobe.hlx.page/foo.html',
+      ],
+    },
+    {
+      path: '/foo.json',
+      spec: '/foo.json also purges foo.json (content proxy)',
+      purgeUrls: [
+        'https://theblog--adobe.hlx.page/foo.json',
+        'https://blog.adobe.com/foo.json',
+        'https://theblog--adobe.hlx.page/foo.json',
+      ],
+    },
+    {
+      path: '/foo.xml',
+      spec: '/foo.xml purges nothing else',
+      purgeUrls: [
+        'https://theblog--adobe.hlx.page/foo.xml',
+        'https://blog.adobe.com/foo.xml',
+        'https://theblog--adobe.hlx.page/foo.xml',
+      ],
+    },
+  ].forEach(({ path, spec, purgeUrls }) => {
     it(`index function purges outer cdn and inner cdn for ${path}`, async () => {
       const surrogateKey = utils.computeSurrogateKey(`https://theblog--adobe.hlx.page${path}`);
       const fastlyResponse = {};
@@ -235,18 +313,10 @@ describe('Index Tests', () => {
 
       scope.done();
       assert.strictEqual(result.statusCode, 200);
-      assert.strictEqual(
-        result.body.filter((r) => r.status === 'ok' && r.url.startsWith('https://theblog--adobe.hlx.page')).length,
-        numInner, `${numInner} url(s) purged on inner cdn`,
-      );
-      assert.strictEqual(
-        result.body.filter((r) => r.status === 'ok' && r.url.startsWith('https://blog.adobe.com')).length,
-        numOuter, `${numOuter} url(s) purged on outer cdn`,
-      );
-      assert.strictEqual(
-        result.body.filter((r) => r.status === 'ok' && r.url.endsWith('.md')).length,
-        numMd, `${numMd} markdown url(s) purged`,
-      );
+      assert.strictEqual(result.body.length, purgeUrls.length, 'purged the expected number of urls');
+      purgeUrls.forEach((purgeUrl) => {
+        assert.ok(result.body.some((r) => r.status === 'ok' && r.url === purgeUrl), `purged url ${purgeUrl}`);
+      });
     }).timeout(5000);
   });
 
