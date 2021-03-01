@@ -285,7 +285,7 @@ describe('Index Tests', () => {
         'https://theblog--adobe.hlx.page/foo.xml',
       ],
     },
-  ].forEach(({ path, spec, purgeUrls }) => {
+  ].forEach(({ path, purgeUrls }) => {
     it(`index function purges outer cdn and inner cdn for ${path}`, async () => {
       const surrogateKey = utils.computeSurrogateKey(`https://theblog--adobe.hlx.page${path}`);
       const fastlyResponse = {};
