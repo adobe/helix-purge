@@ -27,10 +27,10 @@ const commence = require('./stop');
 
 function getMdUrl(host, path, log) {
   let mdPath;
-  const file = path.split('/').pop();
+  const file = path.split('/').pop() || 'index'; // use 'index' if no filename
   if (file.endsWith('.html')) {
     mdPath = path.replace(/\.html$/, '.md');
-  } else if (!file.contains('.')) {
+  } else if (file && !file.includes('.')) {
     mdPath = `${path}.md`;
   }
   if (!mdPath) {
@@ -64,7 +64,7 @@ async function purgeInner(host, path, service, token, log) {
       results.push({ status: 'ok', url: mdUrl });
     } catch (e) {
       log.error('Unable to purge content proxy', e);
-      return { status: 'error', mdUrl };
+      results.push({ status: 'error', url: mdUrl });
     }
   }
   const url = `https://${host}${path}`;
