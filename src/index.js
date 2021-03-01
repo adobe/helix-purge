@@ -30,8 +30,8 @@ function getMdUrl(host, path, log) {
   const file = path.split('/').pop() || 'index'; // use 'index' if no filename
   if (file.endsWith('.html')) {
     mdPath = path.replace(/\.html$/, '.md');
-  } else if (file && !file.includes('.')) {
-    mdPath = `${path}.md`;
+  } else if (!file.includes('.')) {
+    mdPath = `${path.endsWith(file) ? path : `${path}${file}`}.md`;
   }
   if (!mdPath) {
     log.debug('not an html document, so no markdown purging required');
