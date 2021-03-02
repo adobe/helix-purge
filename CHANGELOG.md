@@ -1,3 +1,17 @@
+# [1.6.0](https://github.com/adobe/helix-purge/compare/v1.5.31...v1.6.0) (2021-03-02)
+
+
+### Bug Fixes
+
+* md url in / case ([3f69166](https://github.com/adobe/helix-purge/commit/3f691662771aff38da54a81730ac9d97250f47db))
+* **purge:** fix errors ([a37a333](https://github.com/adobe/helix-purge/commit/a37a333f632c00535c1e57d3bb4bc8722572b81f))
+
+
+### Features
+
+* **purge:** directory and file purge logic ([839f312](https://github.com/adobe/helix-purge/commit/839f31229598f74e85728d6324d2454be1961362))
+* **purge:** purgeInner() to also purge md ([bee3935](https://github.com/adobe/helix-purge/commit/bee39355d6782c864e8de8e01ae33a7d8bba68a7))
+
 ## [1.5.31](https://github.com/adobe/helix-purge/compare/v1.5.30...v1.5.31) (2021-03-02)
 
 
