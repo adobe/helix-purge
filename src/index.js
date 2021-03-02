@@ -25,23 +25,66 @@ const { fetch, Response } = process.env.HELIX_FETCH_FORCE_HTTP1
   : fetchAPI;
 const commence = require('./stop');
 
+function getMdUrl(host, path, log) {
+  let mdPath;
+  const file = path.split('/').pop() || 'index'; // use 'index' if no filename
+  if (file.endsWith('.html')) {
+    mdPath = path.replace(/\.html$/, '.md');
+  } else if (!file.includes('.')) {
+    mdPath = `${path.endsWith(file) ? path : `${path}${file}`}.md`;
+  }
+  if (!mdPath) {
+    log.debug('not an html document, so no markdown purging required');
+    return null;
+  }
+  const ghDetails = host.split('.')[0].split('--');
+  if (ghDetails.length < 2) {
+    log.warn('invalid inner cdn url');
+    return null;
+  }
+  const owner = ghDetails.pop();
+  const repo = ghDetails.pop();
+  const branch = ghDetails[0] || 'master';
+  return `https://${branch}--${repo}--${owner}.hlx.page${mdPath}`;
+}
+
 async function purgeInner(host, path, service, token, log) {
+  const results = [];
+  const mdUrl = getMdUrl(host, path, log);
+  if (mdUrl) {
+    try {
+      const res = await fetch(mdUrl, {
+        method: 'PURGE',
+      });
+      const msg = await res.text();
+      log.debug(msg);
+      if (!res.ok) {
+        throw new Error(msg);
+      }
+      results.push({ status: 'ok', url: mdUrl });
+    } catch (e) {
+      log.error('Unable to purge content proxy', e);
+      results.push({ status: 'error', url: mdUrl });
+    }
+  }
   const url = `https://${host}${path}`;
   try {
     const f = Fastly(token, service);
     const surrogateKey = utils.computeSurrogateKey(url.replace(/\?.*$/, ''));
     log.info('Purging inner CDN with surrogate key', surrogateKey);
     await f.purgeKey(surrogateKey);
+    results.push({ status: 'ok', url });
   } catch (e) {
     log.error('Unable to purge inner CDN', e);
-    return { status: 'error', url };
+    results.push({ status: 'error', url });
   }
-  return { status: 'ok', url };
+  return results.length === 1 ? results[0] : results;
 }
 
 async function purgeOuter(host, path, log, exact) {
   const url = `https://${host}${path}`;
   log.info('Purging', url);
+  const results = [];
   try {
     const res = await fetch(url, {
       method: 'PURGE',
@@ -51,20 +94,32 @@ async function purgeOuter(host, path, log, exact) {
     if (!res.ok) {
       throw new Error(msg);
     }
+    results.push({ status: 'ok', url });
   } catch (e) {
     log.error('Unable to purge outer CDN', e);
     return { status: 'error', url };
   }
   if (!exact) {
-    if (path.endsWith('.html')) {
-      // if .html extension, also purge URL without it
-      await purgeOuter(host, path.substring(0, path.lastIndexOf('.')), log, true);
-    } else if (!path.split('/').pop().includes('.')) {
-      // if no extension, also purge URL with .html extension
-      await purgeOuter(host, `${path}.html`, log, true);
+    const file = path.split('/').pop();
+    if (!file) {
+      // directory, also purge index(.html)
+      results.push(await purgeOuter(host, `${path}index`, log, true));
+      results.push(await purgeOuter(host, `${path}index.html`, log, true));
+    } else {
+      if (file === 'index' || file === 'index.html') {
+        // index(.html), also purge directory
+        results.push(await purgeOuter(host, path.substring(0, path.lastIndexOf('/') + 1), log, true));
+      }
+      if (file.endsWith('.html')) {
+        // file with .html extension, also purge without extension
+        results.push(await purgeOuter(host, path.substring(0, path.lastIndexOf('.')), log, true));
+      } else if (!file.includes('.')) {
+        // file without extension, also purge with .html extension
+        results.push(await purgeOuter(host, `${path}.html`, log, true));
+      }
     }
   }
-  return { status: 'ok', url };
+  return results.length === 1 ? results[0] : results;
 }
 
 /**
@@ -82,7 +137,7 @@ async function main(req, context) {
   const { env, log } = context;
   const { HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN } = env;
 
-  const results = [];
+  let results = [];
 
   if (!(await commence(log))) {
     return new Response(JSON.stringify({
@@ -112,6 +167,7 @@ async function main(req, context) {
     .map((fwhost) => fwhost.trim())
     .filter((fwhost) => !!fwhost)))
     .map((fwhost) => purgeOuter(fwhost, path, log))));
+  results = results.flat(2);
 
   if (results.length === 0) {
     return new Response(JSON.stringify(results), {
