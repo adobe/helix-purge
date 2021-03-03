@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/adobe/helix-purge/compare/v1.6.1...v1.6.2) (2021-03-03)
+
+
+### Bug Fixes
+
+* **http:** disable http/2 on adobe io runtime ([a1ff219](https://github.com/adobe/helix-purge/commit/a1ff219e549cb1e977795bc3666d52c652e7b9dc))
+
 ## [1.6.1](https://github.com/adobe/helix-purge/compare/v1.6.0...v1.6.1) (2021-03-03)
 
 
