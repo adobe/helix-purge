@@ -18,7 +18,6 @@ const fetchAPI = require('@adobe/helix-fetch');
 
 /* istanbul ignore next */
 const { fetch, Response } = process.env.HELIX_FETCH_FORCE_HTTP1
-
   ? fetchAPI.context({
     alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
   })
@@ -68,8 +67,9 @@ async function purgeInner(host, path, service, token, log) {
     }
   }
   const url = `https://${host}${path}`;
+  let f;
   try {
-    const f = Fastly(token, service);
+    f = Fastly(token, service);
     const surrogateKey = utils.computeSurrogateKey(url.replace(/\?.*$/, ''));
     log.info('Purging inner CDN with surrogate key', surrogateKey);
     await f.purgeKey(surrogateKey);
@@ -77,6 +77,11 @@ async function purgeInner(host, path, service, token, log) {
   } catch (e) {
     log.error('Unable to purge inner CDN', e);
     results.push({ status: 'error', url });
+  } finally {
+    /* istanbul ignore else */
+    if (f) {
+      await f.discard();
+    }
   }
   return results.length === 1 ? results[0] : results;
 }
