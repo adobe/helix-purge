@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/adobe/helix-purge/compare/v1.6.2...v1.6.3) (2021-03-03)
+
+
+### Bug Fixes
+
+* discard fastly client after use ([82c8f57](https://github.com/adobe/helix-purge/commit/82c8f57444336a0125b3e176c721e47a4c961d4e))
+
 ## [1.6.2](https://github.com/adobe/helix-purge/compare/v1.6.1...v1.6.2) (2021-03-03)
 
 
