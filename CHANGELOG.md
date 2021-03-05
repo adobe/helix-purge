@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/adobe/helix-purge/compare/v1.6.3...v1.6.4) (2021-03-05)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#142](https://github.com/adobe/helix-purge/issues/142)) ([2f30a36](https://github.com/adobe/helix-purge/commit/2f30a360419074e19cf9ba66c6522907e77527e6))
+
 ## [1.6.3](https://github.com/adobe/helix-purge/compare/v1.6.2...v1.6.3) (2021-03-03)
 
 
