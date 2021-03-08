@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/adobe/helix-purge/compare/v1.6.6...v1.7.0) (2021-03-08)
+
+
+### Features
+
+* re-enable http/2 ([6bc30a2](https://github.com/adobe/helix-purge/commit/6bc30a27c69c978b0585e77f7970a9bb82277e0d))
+
 ## [1.6.6](https://github.com/adobe/helix-purge/compare/v1.6.5...v1.6.6) (2021-03-08)
 
 
