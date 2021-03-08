@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-purge",
-  "version": "1.6.4",
+  "version": "1.6.6",
   "private": true,
   "description": "Helix Purge",
   "main": "src/index.js",
@@ -19,7 +19,8 @@
   },
   "wsk": {
     "namespace": "helix",
-    "name": "helix-services/purge@${version}"
+    "name": "helix-services/purge@${version}",
+    "memory": 512
   },
   "repository": {
     "type": "git",
@@ -41,7 +42,7 @@
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.4",
-    "@adobe/helix-deploy": "3.7.1",
+    "@adobe/helix-deploy": "3.8.0",
     "@adobe/helix-testutils": "0.4.3",
     "@semantic-release/changelog": "5.0.1",
     "@semantic-release/exec": "5.0.0",
