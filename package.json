@@ -19,7 +19,8 @@
   },
   "wsk": {
     "namespace": "helix",
-    "name": "helix-services/purge@${version}"
+    "name": "helix-services/purge@${version}",
+    "memory": 512
   },
   "repository": {
     "type": "git",
