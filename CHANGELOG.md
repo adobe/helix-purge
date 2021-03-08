@@ -1,3 +1,10 @@
+## [1.6.6](https://github.com/adobe/helix-purge/compare/v1.6.5...v1.6.6) (2021-03-08)
+
+
+### Bug Fixes
+
+* use 512mb memory ([1caf03c](https://github.com/adobe/helix-purge/commit/1caf03cdcf606475982c9ce86e21ce33ce2a1307))
+
 ## [1.6.5](https://github.com/adobe/helix-purge/compare/v1.6.4...v1.6.5) (2021-03-08)
 
 
