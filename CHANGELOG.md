@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/adobe/helix-purge/compare/v1.7.2...v1.7.3) (2021-03-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-deploy to v3.9.1 ([#150](https://github.com/adobe/helix-purge/issues/150)) ([b4f76e4](https://github.com/adobe/helix-purge/commit/b4f76e4e40ca124e3cf1fd3f6128d58ac8e15255))
+
 ## [1.7.2](https://github.com/adobe/helix-purge/compare/v1.7.1...v1.7.2) (2021-03-09)
 
 
