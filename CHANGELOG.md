@@ -1,3 +1,10 @@
+## [1.7.5](https://github.com/adobe/helix-purge/compare/v1.7.4...v1.7.5) (2021-03-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-deploy to v3.14.0 ([#154](https://github.com/adobe/helix-purge/issues/154)) ([f0dc3b1](https://github.com/adobe/helix-purge/commit/f0dc3b19c5f3bd025e3f245f3627f55b7833a38e))
+
 ## [1.7.4](https://github.com/adobe/helix-purge/compare/v1.7.3...v1.7.4) (2021-03-10)
 
 
