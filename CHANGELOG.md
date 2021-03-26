@@ -1,3 +1,10 @@
+## [1.7.11](https://github.com/adobe/helix-purge/compare/v1.7.10...v1.7.11) (2021-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#168](https://github.com/adobe/helix-purge/issues/168)) ([5c82c2d](https://github.com/adobe/helix-purge/commit/5c82c2d4d8e2c8a23cbe592a56d046677ade6a83))
+
 ## [1.7.10](https://github.com/adobe/helix-purge/compare/v1.7.9...v1.7.10) (2021-03-26)
 
 
