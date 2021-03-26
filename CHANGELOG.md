@@ -1,3 +1,10 @@
+## [1.7.13](https://github.com/adobe/helix-purge/compare/v1.7.12...v1.7.13) (2021-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-fetch to v2.2.0 ([#170](https://github.com/adobe/helix-purge/issues/170)) ([4c78edc](https://github.com/adobe/helix-purge/commit/4c78edc7d48c5b9f50d7989eef9c7f35a7b69b42))
+
 ## [1.7.12](https://github.com/adobe/helix-purge/compare/v1.7.11...v1.7.12) (2021-03-26)
 
 
