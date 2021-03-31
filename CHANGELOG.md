@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/adobe/helix-purge/compare/v1.7.15...v1.8.0) (2021-03-31)
+
+
+### Features
+
+* **deploy:** deploy to google ([9f021f3](https://github.com/adobe/helix-purge/commit/9f021f3b5ff5551070abe99c160d76299236fa77))
+
 ## [1.7.15](https://github.com/adobe/helix-purge/compare/v1.7.14...v1.7.15) (2021-03-26)
 
 
