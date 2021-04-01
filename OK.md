@@ -1,4 +1,4 @@
-Helix Pages is not **OK**, don't purge!
+Helix Pages is **OK**, commence purging!
 
 /gdrive/ok.html
 
