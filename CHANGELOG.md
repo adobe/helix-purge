@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/adobe/helix-purge/compare/v1.8.1...v1.8.2) (2021-04-05)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#181](https://github.com/adobe/helix-purge/issues/181)) ([17a59d0](https://github.com/adobe/helix-purge/commit/17a59d06aa6c83834175dceff25bf77faec108ee))
+
 ## [1.8.1](https://github.com/adobe/helix-purge/compare/v1.8.0...v1.8.1) (2021-04-03)
 
 
