@@ -12,8 +12,6 @@
 const { wrap } = require('@adobe/openwhisk-action-utils');
 const { logger } = require('@adobe/openwhisk-action-logger');
 const { wrap: status } = require('@adobe/helix-status');
-const Fastly = require('@adobe/fastly-native-promises');
-const { utils } = require('@adobe/helix-shared');
 const fetchAPI = require('@adobe/helix-fetch');
 
 /* istanbul ignore next */
@@ -22,7 +20,6 @@ const { fetch, Response } = process.env.HELIX_FETCH_FORCE_HTTP1
     alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
   })
   : fetchAPI;
-const commence = require('./stop');
 
 function getMdUrl(host, path, log) {
   let mdPath;
@@ -38,8 +35,7 @@ function getMdUrl(host, path, log) {
   }
   const ghDetails = host.split('.')[0].split('--');
   if (ghDetails.length < 2) {
-    log.warn('invalid inner cdn url');
-    return null;
+    throw new Error('invalid inner cdn url');
   }
   const owner = ghDetails.pop();
   const repo = ghDetails.pop();
@@ -49,9 +45,10 @@ function getMdUrl(host, path, log) {
 
 async function purgeInner(host, path, service, token, log) {
   const results = [];
-  const mdUrl = getMdUrl(host, path, log);
-  if (mdUrl) {
-    try {
+  let mdUrl;
+  try {
+    mdUrl = getMdUrl(host, path, log);
+    if (mdUrl) {
       const res = await fetch(mdUrl, {
         method: 'PURGE',
       });
@@ -61,27 +58,10 @@ async function purgeInner(host, path, service, token, log) {
         throw new Error(msg);
       }
       results.push({ status: 'ok', url: mdUrl });
-    } catch (e) {
-      log.error('Unable to purge content proxy', e);
-      results.push({ status: 'error', url: mdUrl });
     }
-  }
-  const url = `https://${host}${path}`;
-  let f;
-  try {
-    f = Fastly(token, service);
-    const surrogateKey = utils.computeSurrogateKey(url.replace(/\?.*$/, ''));
-    log.info('Purging inner CDN with surrogate key', surrogateKey);
-    await f.purgeKey(surrogateKey);
-    results.push({ status: 'ok', url });
   } catch (e) {
-    log.error('Unable to purge inner CDN', e);
-    results.push({ status: 'error', url });
-  } finally {
-    /* istanbul ignore else */
-    if (f) {
-      await f.discard();
-    }
+    log.error('Unable to purge content proxy', e);
+    results.push({ status: 'error', url: mdUrl });
   }
   return results.length === 1 ? results[0] : results;
 }
@@ -143,18 +123,6 @@ async function main(req, context) {
   const { HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN } = env;
 
   let results = [];
-
-  if (!(await commence(log))) {
-    return new Response(JSON.stringify({
-      status: 'error',
-      message: 'Refusing to purge while Helix Pages responses are inconsistent. Check status.project-helix.io for details.',
-    }), {
-      status: 503,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  }
 
   if (host && HLX_PAGES_FASTLY_SVC_ID && HLX_PAGES_FASTLY_TOKEN) {
     results.push(await purgeInner(
