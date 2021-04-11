@@ -33,15 +33,8 @@ function getMdInfo(host, path, log) {
     log.debug('Not an html document, so no markdown purging required');
     return {};
   }
-  const [projectInfo,, env] = host.split('.');
-  if (env && env !== 'page') {
-    return {};
-  }
+  const [projectInfo] = host.split('.');
   const ghDetails = projectInfo.split('.')[0].split('--');
-  if (ghDetails.length < 2) {
-    log.info(`Invalid inner CDN host: ${host}`);
-    return {};
-  }
   const owner = ghDetails.pop();
   const repo = ghDetails.pop();
   const branch = ghDetails[0] || 'master';
