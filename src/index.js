@@ -21,7 +21,7 @@ const { fetch, Response } = process.env.HELIX_FETCH_FORCE_HTTP1
   })
   : fetchAPI;
 
-function getMdUrl(host, path, log) {
+function getMdInfo(host, path, log) {
   let mdPath;
   const file = path.split('/').pop() || 'index'; // use 'index' if no filename
   if (file.endsWith('.html')) {
@@ -30,43 +30,28 @@ function getMdUrl(host, path, log) {
     mdPath = `${path.endsWith(file) ? path : `${path}${file}`}.md`;
   }
   if (!mdPath) {
-    log.debug('not an html document, so no markdown purging required');
-    return null;
+    log.debug('Not an html document, so no markdown purging required');
+    return {};
   }
-  const ghDetails = host.split('.')[0].split('--');
+  const [projectInfo,, env] = host.split('.');
+  if (env && env !== 'page') {
+    return {};
+  }
+  const ghDetails = projectInfo.split('.')[0].split('--');
   if (ghDetails.length < 2) {
-    throw new Error('invalid inner cdn url');
+    log.info(`Invalid inner CDN host: ${host}`);
+    return {};
   }
   const owner = ghDetails.pop();
   const repo = ghDetails.pop();
   const branch = ghDetails[0] || 'master';
-  return `https://${branch}--${repo}--${owner}.hlx.page${mdPath}`;
+  return {
+    host: `${branch}--${repo}--${owner}.hlx.page`,
+    path: mdPath,
+  };
 }
 
-async function purgeInner(host, path, service, token, log) {
-  const results = [];
-  let mdUrl;
-  try {
-    mdUrl = getMdUrl(host, path, log);
-    if (mdUrl) {
-      const res = await fetch(mdUrl, {
-        method: 'PURGE',
-      });
-      const msg = await res.text();
-      log.debug(msg);
-      if (!res.ok) {
-        throw new Error(msg);
-      }
-      results.push({ status: 'ok', url: mdUrl });
-    }
-  } catch (e) {
-    log.error('Unable to purge content proxy', e);
-    results.push({ status: 'error', url: mdUrl });
-  }
-  return results.length === 1 ? results[0] : results;
-}
-
-async function purgeOuter(host, path, log, exact) {
+async function purge(host, path, log, exact) {
   const url = `https://${host}${path}`;
   log.info('Purging', url);
   const results = [];
@@ -88,21 +73,38 @@ async function purgeOuter(host, path, log, exact) {
     const file = path.split('/').pop();
     if (!file) {
       // directory, also purge index(.html)
-      results.push(await purgeOuter(host, `${path}index`, log, true));
-      results.push(await purgeOuter(host, `${path}index.html`, log, true));
+      results.push(await purge(host, `${path}index`, log, true));
+      results.push(await purge(host, `${path}index.html`, log, true));
     } else {
       if (file === 'index' || file === 'index.html') {
         // index(.html), also purge directory
-        results.push(await purgeOuter(host, path.substring(0, path.lastIndexOf('/') + 1), log, true));
+        results.push(await purge(host, path.substring(0, path.lastIndexOf('/') + 1), log, true));
       }
       if (file.endsWith('.html')) {
         // file with .html extension, also purge without extension
-        results.push(await purgeOuter(host, path.substring(0, path.lastIndexOf('.')), log, true));
+        results.push(await purge(host, path.substring(0, path.lastIndexOf('.')), log, true));
       } else if (!file.includes('.')) {
         // file without extension, also purge with .html extension
-        results.push(await purgeOuter(host, `${path}.html`, log, true));
+        results.push(await purge(host, `${path}.html`, log, true));
       }
     }
+  }
+  return results.length === 1 ? results[0] : results;
+}
+
+async function purgeInner(host, path, log) {
+  const results = [];
+  // check host validity
+  if (host.endsWith('.page') && host.includes('--')) {
+    const { host: mdHost, path: mdPath } = getMdInfo(host, path, log);
+    if (mdHost && mdPath) {
+      // first purge markdown
+      results.push(await purge(mdHost, mdPath, log, true));
+    }
+    results.push(await purge(host, path, log));
+  } else {
+    log.warn(`invalid inner CDN host: ${host}`);
+    results.push({ status: 'error', url: `https://${host}${path}` });
   }
   return results.length === 1 ? results[0] : results;
 }
@@ -119,27 +121,25 @@ async function main(req, context) {
   const path = searchParams.get('path') || '';
   const xfh = searchParams.get('xfh') || '';
 
-  const { env, log } = context;
-  const { HLX_PAGES_FASTLY_SVC_ID, HLX_PAGES_FASTLY_TOKEN } = env;
+  const { log } = context;
 
   let results = [];
 
-  if (host && HLX_PAGES_FASTLY_SVC_ID && HLX_PAGES_FASTLY_TOKEN) {
+  if (host) {
     results.push(await purgeInner(
       host,
       path,
-      HLX_PAGES_FASTLY_SVC_ID,
-      HLX_PAGES_FASTLY_TOKEN,
       log,
     ));
   } else {
-    log.warn(`Not purging inner CDN for ${host}${path} due to missing fastly credentials`);
+    log.warn('Not purging inner CDN due to missing host parameter');
   }
   results.push(...await Promise.all(Array.from(new Set(xfh
     .split(',')
     .map((fwhost) => fwhost.trim())
     .filter((fwhost) => !!fwhost)))
-    .map((fwhost) => purgeOuter(fwhost, path, log))));
+    .filter((fwhost) => fwhost !== host) // skip inner CDN host
+    .map((fwhost) => purge(fwhost, path, log))));
   results = results.flat(2);
 
   if (results.length === 0) {
