@@ -34,7 +34,7 @@ createTargets().forEach((target) => {
           expect(response).to.have.status(200);
           expect(response).to.be.json;
           expect(response.body).to.be.an('array');
-          expect(response.body).to.have.a.lengthOf(3);
+          expect(response.body).to.have.a.lengthOf(5);
         }).catch((e) => {
           e.message = `At ${url}\n      ${e.message}`;
           throw e;
