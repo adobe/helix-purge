@@ -9,15 +9,15 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const { wrap } = require('@adobe/openwhisk-action-utils');
-const { logger } = require('@adobe/openwhisk-action-logger');
+const { wrap, utils } = require('@adobe/helix-shared');
+const { logger } = require('@adobe/helix-universal-logger');
 const { wrap: status } = require('@adobe/helix-status');
 const Fastly = require('@adobe/fastly-native-promises');
-const { utils } = require('@adobe/helix-shared');
+const { Response } = require('@adobe/helix-universal');
 const fetchAPI = require('@adobe/helix-fetch');
 
 /* istanbul ignore next */
-const { fetch, Response } = process.env.HELIX_FETCH_FORCE_HTTP1
+const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
   ? fetchAPI.context({
     alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
   })
