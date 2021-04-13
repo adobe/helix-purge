@@ -1,3 +1,10 @@
+## [1.8.8](https://github.com/adobe/helix-purge/compare/v1.8.7...v1.8.8) (2021-04-13)
+
+
+### Bug Fixes
+
+* use helix-universal ([acd75c6](https://github.com/adobe/helix-purge/commit/acd75c6c97c73fdc824d8db9a67f27a8031eeb71))
+
 ## [1.8.7](https://github.com/adobe/helix-purge/compare/v1.8.6...v1.8.7) (2021-04-13)
 
 
