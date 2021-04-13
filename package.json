@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-purge",
-  "version": "1.8.5",
+  "version": "1.8.7",
   "private": true,
   "description": "Helix Purge",
   "main": "src/index.js",
@@ -33,9 +33,9 @@
   },
   "homepage": "https://github.com/adobe/helix-purge#readme",
   "dependencies": {
-    "@adobe/fastly-native-promises": "1.22.4",
+    "@adobe/fastly-native-promises": "1.23.0",
     "@adobe/helix-fetch": "2.2.0",
-    "@adobe/helix-shared": "7.23.1",
+    "@adobe/helix-shared": "7.24.0",
     "@adobe/helix-status": "9.1.6",
     "@adobe/openwhisk-action-logger": "2.4.4",
     "@adobe/openwhisk-action-utils": "4.4.4"
