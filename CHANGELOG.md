@@ -1,3 +1,31 @@
+## [1.8.8](https://github.com/adobe/helix-purge/compare/v1.8.7...v1.8.8) (2021-04-13)
+
+
+### Bug Fixes
+
+* use helix-universal ([acd75c6](https://github.com/adobe/helix-purge/commit/acd75c6c97c73fdc824d8db9a67f27a8031eeb71))
+
+## [1.8.7](https://github.com/adobe/helix-purge/compare/v1.8.6...v1.8.7) (2021-04-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/fastly-native-promises to v1.23.0 ([#199](https://github.com/adobe/helix-purge/issues/199)) ([4212994](https://github.com/adobe/helix-purge/commit/4212994f4533d0291967779e7cbdf6e2d85a054e))
+
+## [1.8.6](https://github.com/adobe/helix-purge/compare/v1.8.5...v1.8.6) (2021-04-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v7.24.0 ([#198](https://github.com/adobe/helix-purge/issues/198)) ([7dad669](https://github.com/adobe/helix-purge/commit/7dad669259d1623f6c313b2e86b3f192b02f967c))
+
+## [1.8.5](https://github.com/adobe/helix-purge/compare/v1.8.4...v1.8.5) (2021-04-12)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#194](https://github.com/adobe/helix-purge/issues/194)) ([fb614e7](https://github.com/adobe/helix-purge/commit/fb614e7bcdf31bd9a32c41d04a4db6de98b1c96e))
+
 ## [1.8.4](https://github.com/adobe/helix-purge/compare/v1.8.3...v1.8.4) (2021-04-09)
 
 
