@@ -1,3 +1,11 @@
+# [1.9.0](https://github.com/adobe/helix-purge/compare/v1.8.11...v1.9.0) (2021-04-19)
+
+
+### Features
+
+* remove stop switch ([3f35747](https://github.com/adobe/helix-purge/commit/3f35747a2e8f4ecb9049509c16775747cc9a358a))
+* remove surrogate key purging and stop switch ([56032b3](https://github.com/adobe/helix-purge/commit/56032b3e8492128cac4ce274e8efaa2f10ae844d))
+
 ## [1.8.11](https://github.com/adobe/helix-purge/compare/v1.8.10...v1.8.11) (2021-04-19)
 
 
