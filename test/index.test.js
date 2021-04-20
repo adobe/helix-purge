@@ -156,9 +156,9 @@ describe('Index Tests', () => {
         'https://blog.adobe.com/',
         'https://blog.adobe.com/index',
         'https://blog.adobe.com/index.html',
-        'https://theblog--adobe.hlx.page/',
-        'https://theblog--adobe.hlx.page/index',
-        'https://theblog--adobe.hlx.page/index.html',
+        'https://master--theblog--adobe.hlx.page/',
+        'https://master--theblog--adobe.hlx.page/index',
+        'https://master--theblog--adobe.hlx.page/index.html',
       ],
     },
     {
@@ -169,9 +169,9 @@ describe('Index Tests', () => {
         'https://blog.adobe.com/index.html',
         'https://blog.adobe.com/',
         'https://blog.adobe.com/index',
-        'https://theblog--adobe.hlx.page/index.html',
-        'https://theblog--adobe.hlx.page/',
-        'https://theblog--adobe.hlx.page/index',
+        'https://master--theblog--adobe.hlx.page/index.html',
+        'https://master--theblog--adobe.hlx.page/',
+        'https://master--theblog--adobe.hlx.page/index',
       ],
     },
     {
@@ -182,9 +182,9 @@ describe('Index Tests', () => {
         'https://blog.adobe.com/index',
         'https://blog.adobe.com/',
         'https://blog.adobe.com/index.html',
-        'https://theblog--adobe.hlx.page/index',
-        'https://theblog--adobe.hlx.page/',
-        'https://theblog--adobe.hlx.page/index.html',
+        'https://master--theblog--adobe.hlx.page/index',
+        'https://master--theblog--adobe.hlx.page/',
+        'https://master--theblog--adobe.hlx.page/index.html',
       ],
     },
     {
@@ -194,8 +194,8 @@ describe('Index Tests', () => {
         'https://master--theblog--adobe.hlx.page/foo.md',
         'https://blog.adobe.com/foo.html',
         'https://blog.adobe.com/foo',
-        'https://theblog--adobe.hlx.page/foo.html',
-        'https://theblog--adobe.hlx.page/foo',
+        'https://master--theblog--adobe.hlx.page/foo.html',
+        'https://master--theblog--adobe.hlx.page/foo',
       ],
     },
     {
@@ -205,8 +205,8 @@ describe('Index Tests', () => {
         'https://master--theblog--adobe.hlx.page/foo.md',
         'https://blog.adobe.com/foo',
         'https://blog.adobe.com/foo.html',
-        'https://theblog--adobe.hlx.page/foo',
-        'https://theblog--adobe.hlx.page/foo.html',
+        'https://master--theblog--adobe.hlx.page/foo',
+        'https://master--theblog--adobe.hlx.page/foo.html',
       ],
     },
     {
@@ -214,7 +214,7 @@ describe('Index Tests', () => {
       spec: '/foo.json also purges foo.json (content proxy)',
       purgeUrls: [
         'https://blog.adobe.com/foo.json',
-        'https://theblog--adobe.hlx.page/foo.json',
+        'https://master--theblog--adobe.hlx.page/foo.json',
       ],
     },
     {
@@ -222,14 +222,11 @@ describe('Index Tests', () => {
       spec: '/foo.xml purges nothing else',
       purgeUrls: [
         'https://blog.adobe.com/foo.xml',
-        'https://theblog--adobe.hlx.page/foo.xml',
+        'https://master--theblog--adobe.hlx.page/foo.xml',
       ],
     },
   ].forEach(({ path, purgeUrls }) => {
     it(`index function purges outer cdn and inner cdn for ${path}`, async () => {
-      const surrogateKey = utils.computeSurrogateKey(`https://theblog--adobe.hlx.page${path}`);
-      const fastlyResponse = {};
-      fastlyResponse[surrogateKey] = '19940-1591821325-42118515';
       const scope = nock(/./)
         .intercept(/.*/, 'PURGE')
         .reply(200)
@@ -237,14 +234,10 @@ describe('Index Tests', () => {
 
       const result = await index({
         __ow_logger,
-        xfh: 'blog.adobe.com, theblog--adobe.hlx.page',
+        xfh: 'blog.adobe.com, master--theblog--adobe.hlx.page',
         path,
-        host: 'theblog--adobe.hlx.page',
-      }, {
-        HLX_PAGES_FASTLY_SVC_ID: 'test-service',
-        HLX_PAGES_FASTLY_TOKEN: 'dummy',
+        host: 'master--theblog--adobe.hlx.page',
       });
-
       scope.done();
       assert.strictEqual(result.statusCode, 200);
       assert.strictEqual(result.body.length, purgeUrls.length, 'purged the expected number of urls');

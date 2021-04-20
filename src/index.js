@@ -38,7 +38,7 @@ function getMdInfo(host, path, log) {
   const ghDetails = projectInfo.split('.')[0].split('--');
   const owner = ghDetails.pop();
   const repo = ghDetails.pop();
-  const branch = ghDetails[0] || 'master';
+  const branch = ghDetails[0] || 'main';
   return {
     host: `${branch}--${repo}--${owner}.hlx.page`,
     path: mdPath,
