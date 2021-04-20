@@ -16,7 +16,6 @@ process.env.HELIX_FETCH_FORCE_HTTP1 = 'true';
 const nock = require('nock');
 const assert = require('assert');
 const { logging } = require('@adobe/helix-testutils');
-const { utils } = require('@adobe/helix-shared');
 const { main } = require('../src/index.js');
 const { retrofit } = require('./utils.js');
 
