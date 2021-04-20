@@ -149,6 +149,8 @@ describe('Index Tests', () => {
 
   [
     {
+      xfh: 'blog.adobe.com, master--theblog--adobe.hlx.page',
+      host: 'master--theblog--adobe.hlx.page',
       path: '/',
       spec: '/ also purges /index and /index.html and /index.md',
       purgeUrls: [
@@ -162,6 +164,8 @@ describe('Index Tests', () => {
       ],
     },
     {
+      xfh: 'blog.adobe.com, master--theblog--adobe.hlx.page',
+      host: 'master--theblog--adobe.hlx.page',
       path: '/index.html',
       spec: '/index.html also purges / and /index and /index.md',
       purgeUrls: [
@@ -175,6 +179,8 @@ describe('Index Tests', () => {
       ],
     },
     {
+      xfh: 'blog.adobe.com, master--theblog--adobe.hlx.page',
+      host: 'master--theblog--adobe.hlx.page',
       path: '/index',
       spec: '/index also purges / and /index.html and /index.md',
       purgeUrls: [
@@ -188,6 +194,8 @@ describe('Index Tests', () => {
       ],
     },
     {
+      xfh: 'blog.adobe.com, master--theblog--adobe.hlx.page',
+      host: 'master--theblog--adobe.hlx.page',
       path: '/foo.html',
       spec: '/foo.html also purges /foo and /foo.md',
       purgeUrls: [
@@ -199,33 +207,41 @@ describe('Index Tests', () => {
       ],
     },
     {
+      xfh: 'spark-website--adobe.hlx.live, main--spark-website--adobe.hlx.page',
+      host: 'main--spark-website--adobe.hlx.page',
       path: '/foo',
       spec: '/foo also purges /foo.html and /foo.md',
       purgeUrls: [
-        'https://master--theblog--adobe.hlx.page/foo.md',
-        'https://blog.adobe.com/foo',
-        'https://blog.adobe.com/foo.html',
-        'https://master--theblog--adobe.hlx.page/foo',
-        'https://master--theblog--adobe.hlx.page/foo.html',
+        'https://main--spark-website--adobe.hlx.page/foo.md',
+        'https://spark-website--adobe.hlx.live/foo',
+        'https://spark-website--adobe.hlx.live/foo.html',
+        'https://main--spark-website--adobe.hlx.page/foo',
+        'https://main--spark-website--adobe.hlx.page/foo.html',
       ],
     },
     {
+      xfh: 'spark-website--adobe.hlx.live, main--spark-website--adobe.hlx.page',
+      host: 'main--spark-website--adobe.hlx.page',
       path: '/foo.json',
       spec: '/foo.json also purges foo.json (content proxy)',
       purgeUrls: [
-        'https://blog.adobe.com/foo.json',
-        'https://master--theblog--adobe.hlx.page/foo.json',
+        'https://spark-website--adobe.hlx.live/foo.json',
+        'https://main--spark-website--adobe.hlx.page/foo.json',
       ],
     },
     {
+      xfh: 'spark-website--adobe.hlx.live, main--spark-website--adobe.hlx.page',
+      host: 'main--spark-website--adobe.hlx.page',
       path: '/foo.xml',
       spec: '/foo.xml purges nothing else',
       purgeUrls: [
-        'https://blog.adobe.com/foo.xml',
-        'https://master--theblog--adobe.hlx.page/foo.xml',
+        'https://spark-website--adobe.hlx.live/foo.xml',
+        'https://main--spark-website--adobe.hlx.page/foo.xml',
       ],
     },
-  ].forEach(({ path, purgeUrls }) => {
+  ].forEach(({
+    xfh, host, path, purgeUrls,
+  }) => {
     it(`index function purges outer cdn and inner cdn for ${path}`, async () => {
       const scope = nock(/./)
         .intercept(/.*/, 'PURGE')
@@ -234,9 +250,9 @@ describe('Index Tests', () => {
 
       const result = await index({
         __ow_logger,
-        xfh: 'blog.adobe.com, master--theblog--adobe.hlx.page',
+        xfh,
         path,
-        host: 'master--theblog--adobe.hlx.page',
+        host,
       });
       scope.done();
       assert.strictEqual(result.statusCode, 200);
