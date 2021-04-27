@@ -1,3 +1,10 @@
+## [1.9.4](https://github.com/adobe/helix-purge/compare/v1.9.3...v1.9.4) (2021-04-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v7.28.0 ([#212](https://github.com/adobe/helix-purge/issues/212)) ([22c64ff](https://github.com/adobe/helix-purge/commit/22c64ff171fb2452707f4dd099b5519193596055))
+
 ## [1.9.3](https://github.com/adobe/helix-purge/compare/v1.9.2...v1.9.3) (2021-04-25)
 
 
