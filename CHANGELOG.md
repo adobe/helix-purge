@@ -1,3 +1,10 @@
+## [1.9.6](https://github.com/adobe/helix-purge/compare/v1.9.5...v1.9.6) (2021-04-30)
+
+
+### Bug Fixes
+
+* code not purged on www.hlx.page ([4aa8331](https://github.com/adobe/helix-purge/commit/4aa83318412755fd3b84998e284e7903dff60732))
+
 ## [1.9.5](https://github.com/adobe/helix-purge/compare/v1.9.4...v1.9.5) (2021-04-28)
 
 
