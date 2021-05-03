@@ -96,6 +96,9 @@ async function purgeInner(host, path, log) {
       results.push(await purge(mdHost, mdPath, log, true));
     }
     results.push(await purge(host, path, log));
+  } else if (host === 'www.hlx.page') {
+    // special case
+    results.push(await purge(host, path, log));
   } else {
     log.warn(`invalid inner CDN host: ${host}`);
     results.push({ status: 'error', url: `https://${host}${path}` });

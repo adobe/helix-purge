@@ -254,6 +254,24 @@ describe('Index Tests', () => {
     }).timeout(5000);
   });
 
+  it('index function purges code on www.hlx.live', async () => {
+    const scope = nock(/./)
+      .intercept(/.*/, 'PURGE')
+      .reply(200)
+      .persist();
+
+    const result = await index({
+      __ow_logger,
+      xfh: 'www.hlx.live, www.hlx.page',
+      path: '/foo.js',
+      host: 'www.hlx.page',
+    });
+
+    scope.done();
+    assert.strictEqual(result.statusCode, 200);
+    assert.strictEqual(result.body.length, 2, 'purged the expected number of urls');
+  }).timeout(5000);
+
   it('index function sanitizes x-forwarded-host before purging outer cdn', async () => {
     const scope = nock(/./)
       .intercept(/.*/, 'PURGE')
