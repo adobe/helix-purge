@@ -16,7 +16,7 @@ process.env.HELIX_FETCH_FORCE_HTTP1 = 'true';
 const nock = require('nock');
 const assert = require('assert');
 const { logging } = require('@adobe/helix-testutils');
-const { utils } = require('@adobe/helix-shared');
+const { computeSurrogateKey } = require('@adobe/helix-shared-utils');
 const { main } = require('../src/index.js');
 const { retrofit } = require('./utils.js');
 
@@ -227,7 +227,7 @@ describe('Index Tests', () => {
     },
   ].forEach(({ path, purgeUrls }) => {
     it(`index function purges outer cdn and inner cdn for ${path}`, async () => {
-      const surrogateKey = utils.computeSurrogateKey(`https://theblog--adobe.hlx.page${path}`);
+      const surrogateKey = computeSurrogateKey(`https://theblog--adobe.hlx.page${path}`);
       const fastlyResponse = {};
       fastlyResponse[surrogateKey] = '19940-1591821325-42118515';
       const scope = nock(/./)
