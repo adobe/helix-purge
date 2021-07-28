@@ -1,3 +1,10 @@
+## [1.9.13](https://github.com/adobe/helix-purge/compare/v1.9.12...v1.9.13) (2021-07-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/fastly-native-promises to v1.23.3 ([#249](https://github.com/adobe/helix-purge/issues/249)) ([ff21fe6](https://github.com/adobe/helix-purge/commit/ff21fe627a262a5a5bc39aa2690d1f17a15a95f5))
+
 ## [1.9.12](https://github.com/adobe/helix-purge/compare/v1.9.11...v1.9.12) (2021-07-14)
 
 
