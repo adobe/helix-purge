@@ -1,3 +1,10 @@
+## [1.9.14](https://github.com/adobe/helix-purge/compare/v1.9.13...v1.9.14) (2021-07-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-status to v9.2.0 ([#250](https://github.com/adobe/helix-purge/issues/250)) ([3533849](https://github.com/adobe/helix-purge/commit/35338498d585499af6ac925370262c9199184d2c))
+
 ## [1.9.13](https://github.com/adobe/helix-purge/compare/v1.9.12...v1.9.13) (2021-07-28)
 
 
