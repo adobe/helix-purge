@@ -74,6 +74,7 @@ jobs:
       # see https://circleci.com/orbs/registry/orb/adobe/helix-post-deploy
       # for more available parameters
       - helix-post-deploy/monitoring:
+          targets: universal, aws, adobeio
           statuspage_name: Helix Purge
           statuspage_group: Publishing
           newrelic_group_policy: Publishing Repeated Failure
