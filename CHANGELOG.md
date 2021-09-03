@@ -1,3 +1,10 @@
+## [1.9.21](https://github.com/adobe/helix-purge/compare/v1.9.20...v1.9.21) (2021-09-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-universal-logger to v1.0.8 ([#271](https://github.com/adobe/helix-purge/issues/271)) ([c43d595](https://github.com/adobe/helix-purge/commit/c43d595985d7d5de4e4247c7dad0bbe1507f071a))
+
 ## [1.9.20](https://github.com/adobe/helix-purge/compare/v1.9.19...v1.9.20) (2021-09-03)
 
 
