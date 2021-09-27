@@ -37,12 +37,12 @@
     "@adobe/helix-fetch": "2.4.2",
     "@adobe/helix-shared-wrap": "1.0.0",
     "@adobe/helix-status": "9.2.3",
-    "@adobe/helix-universal": "1.6.12",
+    "@adobe/helix-universal": "1.7.0",
     "@adobe/helix-universal-logger": "1.0.9"
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.5",
-    "@adobe/helix-deploy": "4.9.11",
+    "@adobe/helix-deploy": "4.11.0",
     "@adobe/helix-shared-utils": "1.0.3",
     "@adobe/helix-testutils": "0.4.5",
     "@semantic-release/changelog": "6.0.0",
