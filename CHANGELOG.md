@@ -1,3 +1,10 @@
+## [1.9.26](https://github.com/adobe/helix-purge/compare/v1.9.25...v1.9.26) (2021-09-27)
+
+
+### Bug Fixes
+
+* **deps:** use secrets-manager ([afd1f8e](https://github.com/adobe/helix-purge/commit/afd1f8e20e6fae5d54eb368ef1d5a05d2fe17579))
+
 ## [1.9.25](https://github.com/adobe/helix-purge/compare/v1.9.24...v1.9.25) (2021-09-22)
 
 
