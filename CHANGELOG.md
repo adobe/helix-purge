@@ -1,3 +1,10 @@
+## [1.9.32](https://github.com/adobe/helix-purge/compare/v1.9.31...v1.9.32) (2021-11-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-universal to v1.9.1 ([#314](https://github.com/adobe/helix-purge/issues/314)) ([7dac5de](https://github.com/adobe/helix-purge/commit/7dac5de3b4d42470e4d06858b22854e0ee15b1b2))
+
 ## [1.9.31](https://github.com/adobe/helix-purge/compare/v1.9.30...v1.9.31) (2021-11-05)
 
 
