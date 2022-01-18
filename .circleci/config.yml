@@ -76,8 +76,7 @@ jobs:
       - helix-post-deploy/monitoring:
           targets: universal, aws, adobeio
           statuspage_name: Helix Purge
-          statuspage_group: Publishing
-          newrelic_group_policy: Publishing Repeated Failure
+          statuspage_group: Publishing (Legacy)
 
   branch-deploy:
     executor: node14
