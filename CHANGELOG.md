@@ -1,3 +1,10 @@
+## [1.9.33](https://github.com/adobe/helix-purge/compare/v1.9.32...v1.9.33) (2022-02-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared-wrap to v1.0.1 ([#340](https://github.com/adobe/helix-purge/issues/340)) ([aa2e264](https://github.com/adobe/helix-purge/commit/aa2e26431e67085e257da6c8c74f6c345ef73546))
+
 ## [1.9.32](https://github.com/adobe/helix-purge/compare/v1.9.31...v1.9.32) (2021-11-26)
 
 
