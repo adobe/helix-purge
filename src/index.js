@@ -12,7 +12,7 @@
 const wrap = require('@adobe/helix-shared-wrap');
 const { logger } = require('@adobe/helix-universal-logger');
 const { wrap: status } = require('@adobe/helix-status');
-const { Response } = require('@adobe/helix-universal');
+const { Response } = require('@adobe/helix-fetch');
 const fetchAPI = require('@adobe/helix-fetch');
 
 /* istanbul ignore next */
